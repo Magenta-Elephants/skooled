@@ -25,7 +25,7 @@ class DocumentsList extends React.Component {
 
     axios.get('/doc/documents', config)
     .then(docs => {
-      console.log('Retrieved docs back from GET /documents request.', docs);
+      console.log('Retrieved docs back from GET /documents request.');
       this.setState({
         documents: docs.data
       });
@@ -60,7 +60,6 @@ class DocumentsList extends React.Component {
       renderCreateNew: true
     });
   }
-
   render () {
     if (this.props.userType === 'teacher') {
       if (this.state.renderCreateNew) {

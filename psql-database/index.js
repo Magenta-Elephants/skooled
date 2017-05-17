@@ -117,14 +117,13 @@ module.exports = {
       callback(error, null);
     });
   },
-
+// WE: DOCUMENTS DB WAS CHANGED AND SO WAS INSERT DOCUMENT
   insertDocument : (doc, callback) => {
     Document.forge({
       title: doc.title,
       body: doc.body,
       id_student: doc.studentId,
-      first_name_student: doc.studentFirstName,
-      last_name_student: doc.studentLastName
+      id_class: doc.classId
     })
     .save()
     .then(doc => {

@@ -60,7 +60,7 @@ router.post('/documents', ensureAuthorized, (req, res) => {
     });
   })
   .catch(error => {
-    res.sendStatus(500);
+    res.sendStatus(500).send(error);
   });
 });
 
