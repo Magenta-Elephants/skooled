@@ -50,8 +50,6 @@ module.exports = function (knex, Promise) {
         table.string('body', 10000);
         table.boolean('permissioned', false);
         table.integer('id_student').references('students.id');
-        table.string('first_name_student');
-        table.string('last_name_student');
         table.integer('id_classes').references('classes.id');
       }).catch((error) => {
         console.log('documents database error:', error);
