@@ -14,7 +14,7 @@ router.use(bodyParser.json());
 router.post('/documents', ensureAuthorized, (req, res) => {
   // Teacher creates a document for an activity.
   // Check which user_id is currently authorised/logged in.
-
+  console.log('IM HERE!')
   // Get all student_id from db users_students table connected to currrent id_user.
   const id_user = req.decoded.id;
 
@@ -31,7 +31,7 @@ router.post('/documents', ensureAuthorized, (req, res) => {
   .then(response => {
     // For each student create a new instance of doc in db, INCLUDING FOR STUDENT'S ID.
     // id  title  body  permissioned  student_id
-
+    console.log('IM HERE TOO', response)
     // Iterate through array of entries from users_students join table.
     response.models.forEach(usersStudentsEntry => {
       // With each student id, get the full student's info from students table in db.
@@ -46,21 +46,26 @@ router.post('/documents', ensureAuthorized, (req, res) => {
           studentFirstName: studentInfo.attributes.first_name,
           studentLastName: studentInfo.attributes.last_name
         };
+        console.log('DOC POST', doc)
         insertDocumentAsync(doc)
         .catch(error => {
           console.log('Error inserting doc for a specific student.')
+          console.log(error)
         })
       })
       .then(() => {
         res.sendStatus(200);
       })
       .catch(error => {
-        res.sendStatus(500);
+        // res.sendStatus(500);
+        res.send(error)
       })
     });
   })
   .catch(error => {
-    res.sendStatus(500);
+    console.log('What?')
+    res.sendStatus(500).send(error);
+    // res.send(error);
   });
 });
 
@@ -92,6 +97,7 @@ router.get('/documents', ensureAuthorized, (req, res) => {
     function syncFetchDocs(studentsIdArray) {
       let studentId = studentsIdArray.pop();
       pg.selectApplicableDocuments(studentId, (error, list) => {
+        console.log('LIST: ',list)
         results = results.concat(list.models)
         if (studentIds.length) {
           return syncFetchDocs(studentsIdArray);
@@ -108,7 +114,8 @@ router.get('/documents', ensureAuthorized, (req, res) => {
     return syncFetchDocs(studentIds);
   })
   .catch(error => {
-    res.sendStatus(500);
+    // res.sendStatus(500);
+    res.send(error);
   });
 });
 
@@ -123,7 +130,8 @@ router.put('/documents', ensureAuthorized, (req, res) => {
     res.sendStatus(200);
   })
   .catch(error => {
-    res.sendStatus(500);
+    // res.sendStatus(500);
+    res.send(error);
   });
 });
 
