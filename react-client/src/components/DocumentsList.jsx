@@ -25,15 +25,13 @@ class DocumentsList extends React.Component {
 
     axios.get('/doc/documents', config)
     .then(docs => {
-      console.log('Retrieved docs back from GET /documents request.', docs);
-      console.log('Docs: ', docs)
+      console.log('Retrieved docs back from GET /documents request.');
       this.setState({
         documents: docs.data
       });
     })
     .catch(error => {
       console.log('Error retrieving docs back from GET /documents request.');
-      console.log(error)
     });
   }
 
@@ -63,7 +61,6 @@ class DocumentsList extends React.Component {
     });
   }
   render () {
-    console.log('STATE DOCUMENTS: ', this.state)
     if (this.props.userType === 'teacher') {
       if (this.state.renderCreateNew) {
         return (<Redirect to="/createDocument"/>);
