@@ -32,7 +32,7 @@ class CreateDocument extends React.Component {
   }
 
   createDoc () {
-    console.log('createDoc invoked', this.state);
+    console.log('createDoc invoked');
     var currentToken = window.localStorage.accessToken;
 
     var config = {
@@ -44,7 +44,6 @@ class CreateDocument extends React.Component {
       window.alert('Document created in database!');
     })
     .catch(error => {
-      console.log('post error: ',error)
       window.alert('Error creating document in database.')
     });
   }
