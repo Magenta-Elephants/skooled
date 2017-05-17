@@ -123,7 +123,8 @@ module.exports = {
       title: doc.title,
       body: doc.body,
       id_student: doc.studentId,
-      id_class: doc.classId
+      // commented out until class data can be passed in through doc.
+      // id_class: doc.classId
     })
     .save()
     .then(doc => {
