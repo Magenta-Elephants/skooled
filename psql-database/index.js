@@ -175,6 +175,24 @@ module.exports = {
       console.log('ERROR UPDATING DOCUMENT PERMISSION STATUS', error);
       callback(error, null);
     })
+  },
+
+  // TEACHER CLASSES PAGE: ADD CLASS
+  insertClass : (data, callback) => {
+    Class.forge({
+      name: data.name,
+      description: data.description,
+      id_user: data.userId
+    })
+    .save()
+    .then(data => {
+      console.log('SUCCESSFUL INSERT INTO CLASS TABLE: ', data)
+      callback(null, data)
+    })
+    .catch(error => {
+      console.log('ERROR WITH INSERT IN CLASS TABLE:', error);
+      callback(error, null);
+    });
   }
 
 };
