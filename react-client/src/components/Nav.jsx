@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter, Route, Link, Switch, Redirect } from 'react-router-dom';
 
 const Nav = (props) => {
-  console.log('sdjifhis', props.userType);
   if (props.userType === 'teacher') {
     return (
       <div id="menuToggle">
@@ -15,6 +14,7 @@ const Nav = (props) => {
         <li role="presentation"><Link to="documents">Documents</Link></li>
         <li role="presentation"><Link to="video">Video</Link></li>
         <li role="presentation"><Link to="admin">Settings</Link></li>
+        <li role="presentation"><Link to="classes">Classes</Link></li>
         </ul>
       </div>
     )
