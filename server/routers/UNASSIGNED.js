@@ -63,7 +63,7 @@ router.get('CHANGE_THIS_ROUTE', ensureAuthorized, (req, res) => {
   const retrieveClassAssignmentsAsync = Promise.promisify(pg.retrieveClassAssignments);
 
   // Promisify retrieveAssignmentGrade
-  const retrieveAssignmentGradeAsync = Promise.promisify(pg.retrieveAssignmentGrade);
+  const retrieveStudentAssignmentGradeAsync = Promise.promisify(pg.retrieveStudentAssignmentGrade);
 
   // find what assignments are associated with the class
   retrieveClassAssignmentsAsync(id_class)
@@ -71,7 +71,7 @@ router.get('CHANGE_THIS_ROUTE', ensureAuthorized, (req, res) => {
       allGrades = [];
       // find grades for each assignment for given student
       assignments.forEach(assignment => {
-        retrieveAssignmentGradeAsync(assignment.id, id_student, (error, data) => {
+        retrieveStudentAssignmentGradeAsync(assignment.id, id_student, (error, data) => {
           allGrades.push(data)
         })  
       })
@@ -81,3 +81,26 @@ router.get('CHANGE_THIS_ROUTE', ensureAuthorized, (req, res) => {
       res.sendStatus(500).send(error);
     })
 });
+
+// EXPECTED REQ.BODY
+// {
+//   assignmentId: assignment id
+// }
+
+// EXPECTED DATA WITHIN RESPONSE 
+// [{
+//   id: id,
+//   id_assignment: assignment id,
+//   id_student: student id,
+//   grade: grade
+// }, ...]
+
+// ME: TEACHER RETRIEVES ALL GRADES FOR A SPECIFIC ASSIGNMENT
+router.get('CHANGE_THIS_ROUTE', ensureAuthorized, (req, res) => {
+  // Teachers fetch entire class's grades for a specific assignment
+  const id_assignment = req.body.assignmentId;
+
+  retrieveAssignmentGrade(id_assignment, (error, grades) => {
+    res.json(grades);
+  })
+})
