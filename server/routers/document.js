@@ -11,11 +11,85 @@ router.use(express.static(__dirname + '/../../react-client/dist'));
 router.use(bodyParser.json());
 
 
+// EXPECTED REQ.BODY
+// {
+//   title: title,
+//   body: body,
+//   classId: classId
+// }
+
+// ME: TEACHER CREATES DOCUMENT FOR ENTIRE CLASS
+router.post('CHANGE_THIS_ROUTE', ensureAuthorized, (req, res) => {
+  // Teacher creates a document for an activity.
+  // Check which class_id is currently in use.
+
+  const id_class = req.body.classId;
+
+  // Promisify retrieveSelectedUsersStudents.
+  const retrieveSelectedClassStudentsAsync = Promise.promisify(pg.retrieveSelectedClassStudents);
+
+  // Promisify selectStudent.
+  const selectStudentAsync = Promise.promisify(pg.selectStudent);
+
+  // Promisify insertDocument.
+  const insertDocumentAsync = Promise.promisify(pg.insertDocument);
+
+  // Get all student_id from db class_student table connected to current id_class.
+  retrieveSelectedClassStudentsAsync(id_class)
+  .then(response => {
+
+    // Iterate through array of entries from class_student join table.
+    response.models.forEach(classStudentsEntry => {
+      // With each student id, get the student's info from students table in db.
+      const id_student = classStudentsEntry.attributes.id_student;
+      selectStudentAsync(id_student)
+      .then(studentInfo => {
+        // Populate the document entry attributes by combining the req.body info with the studentInfo.
+        const doc = {
+          title: req.body.title,
+          body: req.body.body,
+          studentId: studentInfo.attributes.id,
+          classId: req.body.classId
+        };
+        insertDocumentAsync(doc)
+        .catch(error => {
+          console.log('Error inserting doc for a specific student.')
+        })
+      })
+      .then(() => {
+        res.sendStatus(200);
+      })
+      .catch(error => {
+        res.sendStatus(500).send(error);
+      })
+    });
+  })
+  .catch(error => {
+    res.sendStatus(500).send(error);
+  });
+});
+
+// EXPECTED REQ.BODY
+// {
+//   name: name,
+//   classId: class id
+// }
+
+// ME: THIS MIGHT WANT TO BE MOVED TO A TEACHER ROUTE?
+router.post('CHANGE_THIS_ROUTE', ensureAuthorized, (req, res) => {
+  // Teacher creates an assignment for an entire class.
+  pg.insertAssignment(req.body);
+});
+
+
+// <----------------------------------------------------------------->
+
+// DELETE ONCE CLASSES ARE CREATED 
 router.post('/documents', ensureAuthorized, (req, res) => {
   // Teacher creates a document for an activity.
-  // Check which user_id is currently authorised/logged in.
+  // Check which user_id is currently authorized/logged in.
 
-  // Get all student_id from db users_students table connected to currrent id_user.
+  // Get all student_id from db users_students table connected to current id_user.
   const id_user = req.decoded.id;
 
   // Promisify retrieveSelectedUsersStudents.
@@ -63,6 +137,7 @@ router.post('/documents', ensureAuthorized, (req, res) => {
     res.sendStatus(500).send(error);
   });
 });
+// 
 
 
 router.get('/documents', ensureAuthorized, (req, res) => {
@@ -101,6 +176,7 @@ router.get('/documents', ensureAuthorized, (req, res) => {
             return doc.attributes;
           })
           res.json(results);
+
         }
       });
     }
@@ -126,5 +202,6 @@ router.put('/documents', ensureAuthorized, (req, res) => {
     res.sendStatus(500);
   });
 });
+
 
 module.exports = router;
