@@ -189,28 +189,28 @@ module.exports = {
       description: data.description,
       id_user: data.userId
     })
-    .save()
-    .then(data => {
-      console.log('SUCCESSFUL INSERT INTO CLASS TABLE: ', data);
-      callback(null, data);
-    })
-    .catch(error => {
-      console.log('ERROR WITH INSERT IN CLASS TABLE:', error);
-      callback(error, null);
-    });
+      .save()
+      .then(data => {
+        console.log('SUCCESSFUL INSERT INTO CLASS TABLE: ', data);
+        callback(null, data);
+      })
+      .catch(error => {
+        console.log('ERROR WITH INSERT IN CLASS TABLE:', error);
+        callback(error, null);
+      });
   },
 
   // ME: GET ALL THE STUDENTS IN A GIVEN CLASS
   retrieveSelectedClassStudents : (id_class, callback) => {
     ClassStudent.forge()
-    .query('where', {id_class: id_class})
-    .fetchAll({require: true})
-    .then(classStudentEntry => {
-      callback(null, classStudentEntry);
-    })
-    .catch(error => {
-      callback(error, null);
-    });
+      .query('where', {id_class: id_class})
+      .fetchAll({require: true})
+      .then(classStudentEntry => {
+        callback(null, classStudentEntry);
+      })
+      .catch(error => {
+        callback(error, null);
+      });
   },
 
   // ME: ADD A STUDENT TO A GIVEN CLASS
@@ -242,6 +242,19 @@ module.exports = {
       console.log('ERROR WITH INSERT INTO ASSIGNMENT TABLE', error);
       callback(error, null);
     })
+  },
+
+  // ME: FETCH ALL ASSIGNMENTS FOR A GIVEN CLASS 
+  retreiveClassAssignments : (id_class, callback) => {
+    Assignment.forge()
+      .query('where', {id_class: id_class})
+      .fetchAll({require: true})
+      .then(assignments => {
+        callback(null, assignments);
+      })
+      .catch(error => {
+        callback(error, null);
+      })
   }
 
 };
