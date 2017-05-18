@@ -9,7 +9,7 @@ const ensureAuthorized = services.ensureAuth;
 
 router.use(bodyParser.json());
 
-router.get('', ensureAuthorized, (req, res) => {
+router.get('/classes', ensureAuthorized, (req, res) => {
   var userId = req.decoded.id;
 
   var obj = [
@@ -20,6 +20,11 @@ router.get('', ensureAuthorized, (req, res) => {
 
   res.end(JSON.stringify(obj));
 });
+
+router.post('/class/addStudent', ensureAuthorized, (req, res) => {
+  // will add a student to the database
+  res.end(`added ${req.body.F_Name} ${req.body.L_Name} to the database`);
+}); 
 
 router.get('/class', ensureAuthorized, (req, res) => {
   var students = [
@@ -105,7 +110,6 @@ router.get('/class', ensureAuthorized, (req, res) => {
     students: students,
     assignments: assignments
   };
-  console.log('this is the object', obj);
   res.end(JSON.stringify(obj));
 });
 
