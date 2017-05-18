@@ -81,4 +81,23 @@ router.post('/student', ensureAuthorized, (req, res) => {
   });
 });
 
+router.post('/class', ensureAuthorized, (req, res) => {
+
+  pg.insertClass(req.body, (error, data) => {
+    if (error) {
+      console.error('Error inserting new class info to db.', error);
+      res.sendStatus(500).send(error);
+    } else {
+      // req.body expected to be...
+      // {
+      //   name: class name,
+      //   description: class description,
+      //   id_user: teacher id
+      // }    
+      pg.insertClass(req.body);
+      res.sendStatus(200);
+    }
+  })
+});
+
 module.exports = router;

@@ -123,7 +123,8 @@ module.exports = {
       title: doc.title,
       body: doc.body,
       id_student: doc.studentId,
-      id_class: doc.classId
+      // commented out until class data can be passed in through doc.
+      // id_class: doc.classId
     })
     .save()
     .then(doc => {
@@ -175,6 +176,24 @@ module.exports = {
       console.log('ERROR UPDATING DOCUMENT PERMISSION STATUS', error);
       callback(error, null);
     })
+  },
+
+  // TEACHER CLASSES PAGE: ADD CLASS
+  insertClass : (data, callback) => {
+    Class.forge({
+      name: data.name,
+      description: data.description,
+      id_user: data.userId
+    })
+    .save()
+    .then(data => {
+      console.log('SUCCESSFUL INSERT INTO CLASS TABLE: ', data)
+      callback(null, data)
+    })
+    .catch(error => {
+      console.log('ERROR WITH INSERT IN CLASS TABLE:', error);
+      callback(error, null);
+    });
   }
 
 };
