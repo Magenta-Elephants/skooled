@@ -69,45 +69,8 @@ router.post('CHANGE_THIS_ROUTE', ensureAuthorized, (req, res) => {
   });
 });
 
-// EXPECTED REQ.BODY
-// {
-//   name: name,
-//   classId: class id
-// }
-
-// ME: THIS MIGHT WANT TO BE MOVED TO A TEACHER ROUTE?
-router.post('CHANGE_THIS_ROUTE', ensureAuthorized, (req, res) => {
-  // Teacher creates an assignment for an entire class.
-  pg.insertAssignment(req.body);
-});
-
-// EXPECTED DATA WITHIN RESPONSE 
-// [{
-//   name: name,
-//   id_class: class id,
-//   created_at: time stamp
-// }, ...]
-
-// ME: PARENT LOOKING AT PAST ASSIGNMENTS PER CLASS
-router.get('CHANGE_THIS_ROUTE', ensureAuthorized, (req, res) => {
-  // Parents fetch the list of assignments for a specific class
-
-  // Check which id_class is currently in use
-  const id_class = req.body.classId;
-
-  pg.retrieveClassAssignments(id_class, (error, data) => {
-    if (error) {
-      console.error('Error retrieving assignments for specific class');
-      res.sendStatus(500).send(error);
-    } else {
-      res.send(data);
-    }
-  });
-})
-
-// <----------------------------------------------------------------->
-
 // DELETE ONCE CLASSES ARE CREATED 
+// <----------------------------------------------------------------->
 router.post('/documents', ensureAuthorized, (req, res) => {
   // Teacher creates a document for an activity.
   // Check which user_id is currently authorized/logged in.
@@ -160,7 +123,7 @@ router.post('/documents', ensureAuthorized, (req, res) => {
     res.sendStatus(500).send(error);
   });
 });
-// 
+// <----------------------------------------------------------------->
 
 
 router.get('/documents', ensureAuthorized, (req, res) => {
