@@ -13,7 +13,7 @@ var createToken = services.createToken;
 
 var app = express();
 
-app.use('/teachers', teacher);
+app.use('/teacher', teacher);
 app.use('/admin', admin);
 app.use('/doc', doc);
 app.use('/video', video);

@@ -10,7 +10,6 @@ class Chart extends React.Component {
     var result = [];
     // gurantees order
     var keys = Object.keys(data).sort();
-    console.log(data);
     for (var i = 0; i < keys.length; i++) {
       var obj = {
         y: data[keys[i]].length,

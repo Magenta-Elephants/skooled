@@ -26,7 +26,7 @@ class App extends React.Component {
       return (
         <div>
           <Nav userType={this.props.userType}/>
-          <div className="main container-fluid col-md-9 col-md-offset-3">
+          <div className="main container-fluid col-md-12">
               <Route name="home" exact path="/" component={() => (<Home firstName={this.props.firstName}/> )} />
               <Route name="nav" path="/nav" component={Nav} />
               <Route name="admin" path="/admin" component={() => (<CreateUser /> )} />

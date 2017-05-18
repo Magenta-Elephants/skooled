@@ -17,7 +17,7 @@ class TeacherClasses extends React.Component {
       headers: {'Authorization': window.localStorage.accessToken}
     };
 
-    axios.get('/teachers', config)
+    axios.get('/teacher/classes', config)
       .then((response) => {
         this.setState({ classes: response.data })
       })
