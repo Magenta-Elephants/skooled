@@ -191,8 +191,8 @@ module.exports = {
     })
     .save()
     .then(data => {
-      console.log('SUCCESSFUL INSERT INTO CLASS TABLE: ', data)
-      callback(null, data)
+      console.log('SUCCESSFUL INSERT INTO CLASS TABLE: ', data);
+      callback(null, data);
     })
     .catch(error => {
       console.log('ERROR WITH INSERT IN CLASS TABLE:', error);
@@ -226,6 +226,23 @@ module.exports = {
       console.log('ERROR WITH INSERT IN CLASS_STUDENT TABLE:', err);
     });
   },
+
+  // ME: ADD ASSIGNMENT TO A GIVEN CLASS
+  insertAssignment : (assignment, callback) => {
+    Assignment.forge({
+      name: assignment.name,
+      id_class: assignment.classId
+    })
+    .save()
+    .then(assignment => {
+      console.log('SUCCESSFUL INSERT INTO ASSIGNMENT TABLE', assignment);
+      callback(null, assignment);
+    })
+    .catch(error => {
+      console.log('ERROR WITH INSERT INTO ASSIGNMENT TABLE', error);
+      callback(error, null);
+    })
+  }
 
 };
 

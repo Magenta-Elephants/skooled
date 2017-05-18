@@ -76,6 +76,7 @@ module.exports = function (knex, Promise) {
         table.increments('id');
         table.string('name', 250);
         table.integer('id_class').references('classes.id');
+        table.timestamp('created_at').defaultTo(knex.fn.now());
     }).catch((error) => {
       console.log('assignments database error:', error)
     })
