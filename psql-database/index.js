@@ -2,6 +2,10 @@ const User = require('./models/user.js');
 const Student = require('./models/student.js');
 const UserStudent = require('./models/user_student.js');
 const Document = require('./models/document.js')
+const Grade = require('./models/grade.js');
+const Assignment = require('./models/assignment.js');
+const Class = require('./models/class.js');
+const ClassStudent = require('./models/class_student.js');
 const services = require('../services');
 
 module.exports = {
@@ -77,10 +81,10 @@ module.exports = {
       id_student: student_id
     }).save()
     .then(function(student) {
-      console.log('SUCCESSFUL INSERT IN JOIN TABLE:', student);
+      console.log('SUCCESSFUL INSERT IN USER_STUDENT TABLE:', student);
     })
     .catch(function(err) {
-      console.log('ERROR WITH INSERT IN JOIN TABLE:', err);
+      console.log('ERROR WITH INSERT IN USER_STUDENT TABLE:', err);
     });
   },
 
@@ -117,7 +121,7 @@ module.exports = {
       callback(error, null);
     });
   },
-// WE: DOCUMENTS DB WAS CHANGED AND SO WAS INSERT DOCUMENT
+  // ME: DOCUMENTS DB WAS CHANGED AND SO WAS INSERT DOCUMENT
   insertDocument : (doc, callback) => {
     Document.forge({
       title: doc.title,
@@ -178,7 +182,7 @@ module.exports = {
     })
   },
 
-  // TEACHER CLASSES PAGE: ADD CLASS
+  // ME: TEACHER CLASSES PAGE: ADD CLASS
   insertClass : (data, callback) => {
     Class.forge({
       name: data.name,
@@ -194,7 +198,34 @@ module.exports = {
       console.log('ERROR WITH INSERT IN CLASS TABLE:', error);
       callback(error, null);
     });
-  }
+  },
+
+  // ME: GET ALL THE STUDENTS IN A GIVEN CLASS
+  retrieveSelectedClassStudents : (id_class, callback) => {
+    ClassStudent.forge()
+    .query('where', {id_class: id_class})
+    .fetchAll({require: true})
+    .then(classStudentEntry => {
+      callback(null, classStudentEntry);
+    })
+    .catch(error => {
+      callback(error, null);
+    });
+  },
+
+  // ME: ADD A STUDENT TO A GIVEN CLASS
+  insertClassStudent : (id_class, student_id) => {
+    ClassStudent.forge({
+      id_class: id_class,
+      id_student: student_id
+    }).save()
+    .then(function(student) {
+      console.log('SUCCESSFUL INSERT IN CLASS_STUDENT TABLE:', student);
+    })
+    .catch(function(err) {
+      console.log('ERROR WITH INSERT IN CLASS_STUDENT TABLE:', err);
+    });
+  },
 
 };
 
