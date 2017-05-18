@@ -16,12 +16,6 @@ module.exports = {
         last_name: user.lastName,
         phone_number: user.phone,
         role: user.role
-        // email: '123abc@example.com',
-        // password: '123',
-        // first_name: 'John',
-        // last_name: 'Doe',
-        // phone_number: '18001234567',
-        // role: 'admin'
       }).save().then(function(user) {
         callback(null, user);
       }).catch(function(err) {

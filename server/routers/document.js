@@ -10,7 +10,6 @@ const ensureAuthorized = services.ensureAuth;
 router.use(express.static(__dirname + '/../../react-client/dist'));
 router.use(bodyParser.json());
 
-
 router.post('/documents', ensureAuthorized, (req, res) => {
   // Teacher creates a document for an activity.
   // Check which user_id is currently authorised/logged in.

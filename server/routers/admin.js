@@ -24,7 +24,6 @@ router.get('/students', ensureAuthorized, (req, res) => {
 
 
 router.post('/teacher', ensureAuthorized, (req, res) => {
-
   // Create welcome email with new password
   services.sendEmail({
     from: 'no-reply@skooled.com',
