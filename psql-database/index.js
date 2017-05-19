@@ -255,6 +255,32 @@ module.exports = {
       .catch(error => {
         callback(error, null);
       })
+  },
+  
+  // ME: FETCH GRADE FOR A SPECIFIC ASSIGNMENT AND STUDENT
+  retreiveStudentAssignmentGrade : (id_assignment, id_student, callback) => {
+    Grade.forge()
+      .query({where: {id_assignment: id_assignment}, andWhere: {id_student: id_student}})
+      .fetchAll({require: true})
+      .then(grades => {
+        callback(null, grades);
+      })
+      .catch(error => {
+        callback(error, null);
+      })
+  },
+
+  // ME: FETCH GRADE FOR A SPECIFIC ASSIGNMENT
+  retreiveAssignmentGrade : (id_assignment, callback) => {
+    Grade.forge()
+      .query('where', {id_assignment: id_assignment})
+      .fetchAll({require: true})
+      .then(grades => {
+        callback(null, grades);
+      })
+      .catch(error => {
+        callback(error, null);
+      })
   }
 
 };
