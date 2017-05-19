@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Document from './Document.jsx';
 import CreateDocument from './CreateDocument.jsx';
-import { BrowserRouter, Route, Link, Switch, Redirect} from 'react-router-dom';
+import { BrowserRouter, Route, Link, Switch, Redirect } from 'react-router-dom';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 

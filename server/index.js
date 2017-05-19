@@ -7,6 +7,7 @@ var admin = require('./routers/admin');
 var doc = require('./routers/document');
 var video = require('./routers/video');
 var teacher = require('./routers/teacher');
+var students = require('./routers/student');
 
 var ensureAuthorized = services.ensureAuth;
 var createToken = services.createToken;
@@ -17,6 +18,7 @@ app.use('/teacher', teacher);
 app.use('/admin', admin);
 app.use('/doc', doc);
 app.use('/video', video);
+app.use('/students', students);
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
 

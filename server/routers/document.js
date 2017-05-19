@@ -74,7 +74,12 @@ router.post('/documents', ensureAuthorized, (req, res) => {
   // Teacher creates a document for an activity.
   // Check which user_id is currently authorized/logged in.
 
+
   // Get all student_id from db users_students table connected to current id_user.
+
+  // Get all student_id from db users_students table connected to currrent id_user.
+  // ME: Get all student_id from db class_students table using current class-id
+
   const id_user = req.decoded.id;
 
   // Promisify retrieveSelectedUsersStudents.

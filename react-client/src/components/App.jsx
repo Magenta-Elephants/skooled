@@ -11,6 +11,9 @@ import Logout from './Logout.jsx';
 import TeacherClasses from './teacherSpecific/TeacherClasses.jsx';
 import TeacherClass from './teacherSpecific/TeacherClass.jsx';
 import Home from './Home.jsx';
+import StudentsList from './StudentsList.jsx';
+import StudentView from './StudentView.jsx';
+import ClassView from './ClassView.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -39,6 +42,21 @@ class App extends React.Component {
               <Route exact path="/classes/:id" render={innerProps => (
                 <TeacherClass id={innerProps.match.params.id} />
               )} />
+            <Route name="students" path="/students" component={() => (
+              <StudentsList 
+                userType={this.props.userType} 
+                userFirstName={this.props.firstName}
+              /> 
+            )} />
+            <Route name="studentView" path="/students/:studentId" render={innerProps => (
+              <StudentView studentId={innerProps.match.params.studentId} />
+            )} />
+            <Route name="classView" exact path="/students/:studentId/class/:classId" render={innerProps => (
+              <ClassView 
+                classId={innerProps.match.params.classId} 
+                studentId={innerProps.match.params.studentId}
+              />
+            )} />
           </div>
         </div>
       )
