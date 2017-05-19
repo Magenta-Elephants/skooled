@@ -10,15 +10,24 @@ const ensureAuthorized = services.ensureAuth;
 router.use(bodyParser.json());
 
 router.get('/classes', ensureAuthorized, (req, res) => {
-  var userId = req.decoded.id;
+  pg.retrieveClasses({ id_user: req.decoded.id }, (err, classes) => {
+    if (err) res.end(err);
+    res.end(JSON.stringify(classes));
+  });
+});
 
-  var obj = [
-    { id: 3, name: 'Economics 101'},
-    { id: 5, name: 'Music Theory'},
-    { id: 10, name: 'Art'}
-  ];
+// EXPECTED REQ.BODY
+// {
+//   name: name,
+//   classId: class id
+// }
 
-  res.end(JSON.stringify(obj));
+// ME: TEACHER CREATES ASSIGNMENT FOR ENTIRE CLASS
+router.post('/class/addAssignment', ensureAuthorized, (req, res) => {
+  // Teacher creates an assignment for an entire class.
+  pg.insertAssignment(req.body, assignment => {
+    res.end(JSON.stringify(assignment));
+  });
 });
 
 router.post('/class/addStudent', ensureAuthorized, (req, res) => {
@@ -31,7 +40,11 @@ router.post('/class/addGrade', ensureAuthorized, (req, res) => {
 });
 
 router.post('/addClass', ensureAuthorized, (req, res) => {
-  res.end(`added the class ${req.body.name} with a description of ${req.body.description} `)
+  req.body.userId = req.decoded.id;
+  pg.insertClass(req.body, (err, insertedClass) => {
+    if (err) res.end(err);
+    res.end(JSON.stringify(insertedClass));
+  });
 });
 
 router.get('/class', ensureAuthorized, (req, res) => {
@@ -113,6 +126,22 @@ router.get('/class', ensureAuthorized, (req, res) => {
       }]
     }
   ];
+  // var obj = {};
+  // pg.retrieveSelectedClassStudents(req['headers'].class_id, (students) => {
+  //   console.log('these are the students', students);
+  //   obj.students = students;
+  //   if (obj.assignments) {
+  //     res.end(JSON.stringify(students));
+  //   }
+  // });
+
+  // pg.retreiveClassAssignments(req['headers'].class_id, (assignments) => {
+  //   console.log('these are the assignments', assignments);
+  //   obj.assignments = assignments;
+  //   if (obj.students) {
+  //     res.end(JSON.stringify(obj));
+  //   }
+  // });
 
   var obj = {
     students: students,

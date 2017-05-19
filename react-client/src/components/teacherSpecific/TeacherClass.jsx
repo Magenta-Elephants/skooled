@@ -17,8 +17,10 @@ class TeacherClass extends React.Component {
 
   componentWillMount() {
     var config = {
-      headers: {'Authorization': window.localStorage.accessToken},
-      id: this.props.id
+      headers: {
+        'Authorization': window.localStorage.accessToken,
+        class_id: this.props.id
+      }
     };
     console.log(config);
     axios.get('/teacher/class', config)
@@ -47,7 +49,7 @@ class TeacherClass extends React.Component {
             <Students students={this.state.students} />
           </Tab>
           <Tab label="Assignments" value="Assignments">
-            <Assignments assignments={this.state.assignments} students={this.state.students} />
+            <Assignments classId={this.props.id} assignments={this.state.assignments} students={this.state.students} />
           </Tab>
         </Tabs>
         <h1></h1>

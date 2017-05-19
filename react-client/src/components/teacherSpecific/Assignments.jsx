@@ -58,7 +58,8 @@ class Assignments extends React.Component {
 
   submitAssignment() {
     var data = {
-      name: this.state.name
+      name: this.state.studentName,
+      classId: this.props.classId
     };
     var config = {
       headers: {'Authorization': window.localStorage.accessToken},

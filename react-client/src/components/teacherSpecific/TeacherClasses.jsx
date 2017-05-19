@@ -25,6 +25,7 @@ class TeacherClasses extends React.Component {
   componentDidMount() {
     axios.get('/teacher/classes', this.config)
       .then((response) => {
+        console.log('\n\nthe response', response);
         this.setState({ classes: response.data })
       })
       .catch((err) => {
@@ -51,15 +52,17 @@ class TeacherClasses extends React.Component {
   }
 
   submitClass() {
+    this.cancelModal();
     var data = {
       description: this.state.description,
       name: this.state.name
     };
-    this.cancelModal();
 
     axios.post('/teacher/addClass', data, this.config)
       .then((response) => {
-        console.log('success!', response);
+        var classes = this.state.classes;
+        classes.push(response.data);
+        this.setState({ classes: classes });
       })
       .catch((err) => {
         console.log('error!', err);
