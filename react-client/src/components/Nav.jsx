@@ -44,6 +44,7 @@ class Nav extends React.Component {
               <li role="presentation"><Link to="logout">Sign Out</Link></li>
               <li role="presentation"><Link to="documents">Documents</Link></li>
               <li role="presentation"><Link to="video">Video</Link></li>
+              <li role="presentation"><Link to="students">Students</Link></li>
             </ul>
         </div>
       )
