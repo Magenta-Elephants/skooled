@@ -37,6 +37,10 @@ router.get('CHANGE_THIS_ROUTE', ensureAuthorized, (req, res) => {
       res.send(data);
     }
   });
+
+  // grab all assignments for a class
+  // grab all students in a class
+  // 
 });
 
 // EXPECTED REQ.BODY
@@ -100,7 +104,62 @@ router.get('CHANGE_THIS_ROUTE', ensureAuthorized, (req, res) => {
   // Teachers fetch entire class's grades for a specific assignment
   const id_assignment = req.body.assignmentId;
 
-  retrieveAssignmentGrade(id_assignment, (error, grades) => {
+  pg.retrieveAssignmentGrade(id_assignment, (error, grades) => {
     res.json(grades);
   })
 })
+
+// EXPECTED DATA WITHIN RESPONSE 
+// [{
+//   id: class id,
+//   name: class name,
+//   description: class description,
+//   id_user: teacher id
+// }, ...]
+
+// ME: RETRIEVE ALL CLASSES ASSOCIATED WITH TEACHER
+router.get('CHANGE_THIS_ROUTE', ensureAuthorized, (req, res) => {
+  const id_user = req.decode.id;
+
+  retrieveTeacherClasses(id_user, (error, classes) => {
+    res.json(classes);
+  })
+})
+
+// EXPECTED REQ.BODY
+// {
+//   studentId: student id
+// }
+
+// EXPECTED DATA WITHIN RESPONSE 
+// [{
+//   id: id,
+//   name: class name,
+//   description: class description,
+//   id_user: teacher id
+// }, ...]
+
+// ME: RETRIEVE ALL CLASSES ASSOCIATED WITH STUDENT
+router.get('CHANGE_THIS_ROUTE', ensureAuthorized, (req, res) => {
+
+  const id_student = req.body.id_student;
+
+  const retrieveStudentClassesAsync = Promise.promisify(pg.retrieveStudentClasses);
+
+  const retrieveClassAsync = Promise.promisify(pg.retrieveClass);
+
+  retrieveStudentClassesAsync(id_student)
+    .then(classes => { 
+      var classList = [];
+
+      for (var i = 0; i < classes.length; i++) {
+        classList.push(pg.retrieveClass(classes[i].id_class));
+        if (i === classes.length -1) {
+          res.json(classList);
+        }
+      }
+    })
+    .catch(error => {
+      res.sendStatus(500).send(error);
+    })
+}

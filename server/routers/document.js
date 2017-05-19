@@ -10,7 +10,6 @@ const ensureAuthorized = services.ensureAuth;
 router.use(express.static(__dirname + '/../../react-client/dist'));
 router.use(bodyParser.json());
 
-
 // EXPECTED REQ.BODY
 // {
 //   title: title,
@@ -125,7 +124,6 @@ router.post('/documents', ensureAuthorized, (req, res) => {
 });
 // <----------------------------------------------------------------->
 
-
 router.get('/documents', ensureAuthorized, (req, res) => {
   // Teachers and parents fetch the list of documents applicable to them based on their id.
   // Check which user_id is currently authorised/logged in.
@@ -174,7 +172,6 @@ router.get('/documents', ensureAuthorized, (req, res) => {
   });
 });
 
-
 router.put('/documents', ensureAuthorized, (req, res) => {
   // Parent updates the permission status of the document to the db.
 
@@ -188,6 +185,5 @@ router.put('/documents', ensureAuthorized, (req, res) => {
     res.sendStatus(500);
   });
 });
-
 
 module.exports = router;
