@@ -175,18 +175,6 @@ module.exports = {
     })
   },
 
-  retrieveClasses : (data, callback) => {
-    Class.forge()
-      .query('where', { id_user: data.id_user })
-      .fetchAll({ require: true })
-      .then(results => {
-        callback(null, results);
-      })
-      .catch(err => {
-        callback(err, null);
-      })
-  },
-
   // ME: TEACHER CLASSES PAGE: ADD CLASS
   insertClass : (data, callback) => {
     Class.forge({
