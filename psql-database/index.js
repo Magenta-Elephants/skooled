@@ -205,6 +205,45 @@ module.exports = {
       });
   },
 
+  // ME: GET ALL CLASSES ASSOCIATED WITH A STUDENT
+  retrieveStudentClasses : (id_student, callback) => {
+    ClassStudent.forge()
+      .query('where', {id_student: id_student})
+      .fetchAll({require: true})
+      .then(studentClasses => {
+        callback(null, studentClasses);
+      })
+      .catch(error => {
+        callback(error, null);
+      })
+  },
+
+  // ME: RETRIEVE SPECIFIC CLASS
+  retrieveClass : (id_class, callback) => {
+    Class.forge()
+      .query('where', {id: id_class})
+      .fetchAll({require: true})
+      .then(classes => {
+        callback(null, classes);
+      })
+      .catch(error => {
+        callback(error, null);
+      })
+  },
+
+  // ME: GET ALL CLASSES ASSOCIATED WITH A TEACHER
+  retrieveTeacherClasses : (id_user, callback) => {
+    Class.forge()
+      .query('where', {id_user: id_user})
+      .fetchAll({require: true})
+      .then(teacherClasses => {
+        callback(null, teacherClasses);
+      })
+      .catch(error => {
+        callback(error, null);
+      })
+  },
+
   // ME: GET ALL THE STUDENTS IN A GIVEN CLASS
   retrieveSelectedClassStudents : (id_class, callback) => {
     ClassStudent.forge()
@@ -250,7 +289,7 @@ module.exports = {
   },
 
   // ME: FETCH ALL ASSIGNMENTS FOR A GIVEN CLASS 
-  retreiveClassAssignments : (id_class, callback) => {
+  retrieveClassAssignments : (id_class, callback) => {
     Assignment.forge()
       .query('where', {id_class: id_class})
       .fetchAll({require: true})
@@ -263,7 +302,7 @@ module.exports = {
   },
   
   // ME: FETCH GRADE FOR A SPECIFIC ASSIGNMENT AND STUDENT
-  retreiveStudentAssignmentGrade : (id_assignment, id_student, callback) => {
+  retrieveStudentAssignmentGrade : (id_assignment, id_student, callback) => {
     Grade.forge()
       .query({where: {id_assignment: id_assignment}, andWhere: {id_student: id_student}})
       .fetchAll({require: true})
@@ -276,7 +315,7 @@ module.exports = {
   },
 
   // ME: FETCH GRADE FOR A SPECIFIC ASSIGNMENT
-  retreiveAssignmentGrade : (id_assignment, callback) => {
+  retrieveAssignmentGrade : (id_assignment, callback) => {
     Grade.forge()
       .query('where', {id_assignment: id_assignment})
       .fetchAll({require: true})
