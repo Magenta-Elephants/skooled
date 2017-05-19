@@ -6,17 +6,20 @@ var home = require('./routers/admin');
 var admin = require('./routers/admin');
 var doc = require('./routers/document');
 var video = require('./routers/video');
+var teacher = require('./routers/teacher');
 
 var ensureAuthorized = services.ensureAuth;
 var createToken = services.createToken;
 
 var app = express();
 
+app.use('/teacher', teacher);
 app.use('/admin', admin);
 app.use('/doc', doc);
 app.use('/video', video);
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(bodyParser.json());
+
 
 // Shows how secured paths works and get executed when the user enters the website the first time
 app.get('/checkOnClientLoad', ensureAuthorized, (req, res) => {
@@ -34,7 +37,6 @@ app.get('/checkOnClientLoad', ensureAuthorized, (req, res) => {
   });
 });
 
-// Insert demo-user
 // pg.insertUser({
 //   email: '123abc@example.com',
 //   password: '123',

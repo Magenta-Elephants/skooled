@@ -33,7 +33,6 @@ class AppIndex extends React.Component {
   sendCredentials(username, password) {
     axios.post('/login', {username: username, password: password})
     .then(response => {
-      console.log('response invoking sendCredentials received from server', response.data);
       this.setState({
         loggedIn: response.data.isLoggedIn,
         userType: response.data.userRole,
@@ -66,7 +65,6 @@ class AppIndex extends React.Component {
 
     axios.get('checkOnClientLoad', config)
     .then(response => {
-      console.log('response received from server', response);
       this.setState({
         loggedIn: true,
         userType: response.data.userRole,

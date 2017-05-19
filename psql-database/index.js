@@ -20,12 +20,6 @@ module.exports = {
         last_name: user.lastName,
         phone_number: user.phone,
         role: user.role
-        // email: '123abc@example.com',
-        // password: '123',
-        // first_name: 'John',
-        // last_name: 'Doe',
-        // phone_number: '18001234567',
-        // role: 'admin'
       }).save().then(function(user) {
         callback(null, user);
       }).catch(function(err) {
@@ -67,7 +61,6 @@ module.exports = {
     }).save()
     .then(function(student) {
       callback(null, student);
-
     })
     .catch(function(err) {
       callback(err, null);
@@ -180,6 +173,18 @@ module.exports = {
       console.log('ERROR UPDATING DOCUMENT PERMISSION STATUS', error);
       callback(error, null);
     })
+  },
+
+  retrieveClasses : (data, callback) => {
+    Class.forge()
+      .query('where', { id_user: data.id_user })
+      .fetchAll({ require: true })
+      .then(results => {
+        callback(null, results);
+      })
+      .catch(err => {
+        callback(err, null);
+      })
   },
 
   // ME: TEACHER CLASSES PAGE: ADD CLASS
