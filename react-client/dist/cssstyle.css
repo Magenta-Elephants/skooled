@@ -202,3 +202,17 @@ option {
   display: flex;
 }
 
+.displayedTab .displayedList {
+  width: 40%;
+}
+
+form * {
+  display: block;
+}
+
+.floatingActionButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+

@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Chart from './Chart.jsx';
-import Modal from './Modal.jsx';
+import AddToListModal from './AddToListModal.jsx';
 
 class Students extends React.Component {
   constructor(props) {
@@ -36,7 +36,6 @@ class Students extends React.Component {
       headers: {'Authorization': window.localStorage.accessToken},
     };
 
-    console.log(config);
     axios.post('/teacher/class/addStudent', data, config)
       .then((response) => {
         console.log('success!', response);
@@ -48,7 +47,8 @@ class Students extends React.Component {
 
 
   render() {
-    var form = 
+
+    const form = 
       <form>
         <label>First Name:
         <input type="text" onChange={ (e) => this.changeProp('firstName', e.target.value) } />
@@ -60,7 +60,7 @@ class Students extends React.Component {
 
     return (
       <div className="displayedTab">
-        <div>
+        <div className="displayedList">
           <ul>
             {
               this.props.students.map((element, index) => 
@@ -68,9 +68,10 @@ class Students extends React.Component {
               )
             }
           </ul>
-          <Modal title="Add a Student" buttonLabel="Add Student" modalContents={form} handleSubmit={this.handleSubmit} />
+          <AddToListModal title="Add a Student" buttonLabel="Add Student" modalContents={form} handleSubmit={this.handleSubmit} />
+
         </div>
-        <div>
+        <div className="displayedGraph">
           <Chart type="Student" item={this.state.currentStudent} />
         </div>
       </div>

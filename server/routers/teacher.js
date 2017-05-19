@@ -26,6 +26,14 @@ router.post('/class/addStudent', ensureAuthorized, (req, res) => {
   res.end(`added ${req.body.F_Name} ${req.body.L_Name} to the database`);
 }); 
 
+router.post('/class/addGrade', ensureAuthorized, (req, res) => {
+  res.end(`added the assignment grade for the assignment id ${req.body.Ass_Id} with a grade of ${req.body.Grade} for student ${req.body.studentName} `);
+});
+
+router.post('/addClass', ensureAuthorized, (req, res) => {
+  res.end(`added the class ${req.body.name} with a description of ${req.body.description} `)
+});
+
 router.get('/class', ensureAuthorized, (req, res) => {
   var students = [
     { id: 1, 

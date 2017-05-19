@@ -41,13 +41,13 @@ class TeacherClass extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="col-md-10 col-md-offset-1">
         <Tabs value={this.state.currentTab} onChange={this.handleChange} >
           <Tab label="Students" value="Students">
             <Students students={this.state.students} />
           </Tab>
           <Tab label="Assignments" value="Assignments">
-            <Assignments assignments={this.state.assignments} />
+            <Assignments assignments={this.state.assignments} students={this.state.students} />
           </Tab>
         </Tabs>
         <h1></h1>

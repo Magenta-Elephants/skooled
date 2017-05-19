@@ -57,7 +57,8 @@ class Chart extends React.Component {
         text: 'Midterm Assessment'
       },
       chart: {
-        type: 'column'
+        type: 'column',
+        width: 550
       },
       tooltip: {
         formatter: function() {
