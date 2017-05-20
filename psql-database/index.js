@@ -324,6 +324,7 @@ module.exports = {
       .query({where: {id_assignment: id_assignment}, andWhere: {id_student: id_student}})
       .fetchAll({required: true})
       .then(grades => {
+        console.log('got to the right one!!', grades)
         callback(null, grades);
       })
       .catch(error => {

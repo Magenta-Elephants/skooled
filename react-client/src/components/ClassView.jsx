@@ -20,6 +20,8 @@ class ClassView extends React.Component {
 
     axios.get('/students/classDetail', config)
     .then(studentClasses => {
+      console.log('STUDENT CLASSES: ', studentClasses.data)
+      // studentClasses.data = [[current students grades for all assignments], [all assignments with all students grades]]
       this.setState({
         classes: studentClasses.data
       });
