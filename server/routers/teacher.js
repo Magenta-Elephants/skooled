@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const pg = require('../../psql-database');
-var unassignedPg = require('../../psql-database/UNASSIGNED.js');
 const bodyParser = require('body-parser');
 const services = require('../../services');
 const Promise = require('bluebird');
@@ -33,7 +32,7 @@ router.post('/class/addAssignment', ensureAuthorized, (req, res) => {
 });
 
 router.post('/class/addStudentToClass', ensureAuthorized, (req, res) => {
-  unassignedPg.checkIfStudentExists(req.body.studentData.firstName, req.body.studentData.lastName)
+  pg.checkIfStudentExists(req.body.studentData.firstName, req.body.studentData.lastName)
   .then((student) => {
     if (student) {
       return student;
