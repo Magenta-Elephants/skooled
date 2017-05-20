@@ -53,17 +53,28 @@ module.exports = {
     });
   },
 
+  retrieveStudentWithGrades : (student) => {
+    return Student.forge(student)
+    .fetch({ required: true, withRelated: ['grades'] })
+    .then((student) => {
+      console.log('this is the student', student);
+    })
+    .catch((err) => {
+      console.log('there was an error!', err);
+    });
+  },
+
   // ADMIN PAGE: ADD STUDENT
-  insertStudent : (student, callback) => {
-    Student.forge({
+  insertStudent : (student) => {
+    return Student.forge({
       first_name: student.firstName,
       last_name: student.lastName
     }).save()
     .then(function(student) {
-      callback(null, student);
+      return null, student;
     })
     .catch(function(err) {
-      callback(err, null);
+      return err, null;
     });
   },
 
@@ -209,23 +220,40 @@ module.exports = {
   retrieveSelectedClassStudents : (id_class, callback) => {
     ClassStudent.forge()
       .query('where', {id_class: id_class})
-      .fetchAll({require: true})
+      .fetchAll({required: true, withRelated: ['students']})
       .then(classStudentEntry => {
-        callback(null, classStudentEntry);
+        var result = classStudentEnt
+        callback(null, classStudentEntry.models);
+        for (let i = 0; i < classStudentEntry.models.length; i++) {
+          module.exports.retrieveGradesForStudent(classStudentEntry.models[i].id)
+            .then((grades) => {
+            });
+        }
       })
       .catch(error => {
+        console.log('there was an error', error);
         callback(error, null);
       });
   },
 
+  retrieveGradesForStudent : (studentId, cb) => {
+    return Grade.forge()
+    .query('where', {student_id: studentId})
+    .fetchAll({required: true})
+    .then(grades => {
+      return grades;
+    });
+  },
+
   // ME: ADD A STUDENT TO A GIVEN CLASS
   insertClassStudent : (id_class, student_id) => {
-    ClassStudent.forge({
+    return ClassStudent.forge({
       id_class: id_class,
       id_student: student_id
     }).save()
     .then(function(student) {
       console.log('SUCCESSFUL INSERT IN CLASS_STUDENT TABLE:', student);
+      return student;
     })
     .catch(function(err) {
       console.log('ERROR WITH INSERT IN CLASS_STUDENT TABLE:', err);
@@ -286,7 +314,20 @@ module.exports = {
       .catch(error => {
         callback(error, null);
       })
+  },
+
+  insertGrade : (grade) => {
+    return Grade.forge(grade)
+    .save()
+    .then(grade => {
+      return grade;
+    })
+    .then(err => {
+      console.log('there was an error', err);
+    });
   }
+
+
 
 };
 

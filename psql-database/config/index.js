@@ -7,7 +7,7 @@ module.exports = {
 	  host: 'localhost',
 	  user: 'root',
 	  password: '',
-	  database: 'test',
+	  database: 'test3',
 	  charset: 'utf8'
   },
   ssl: true

@@ -13,7 +13,7 @@ class Assignments extends React.Component {
       currentAssignment: { grades: []},
       assignmentName: '',
       showGradeModal: false,
-      studentName: '',
+      studentId: '',
       grade: ''
     };
     this.changeProp = this.changeProp.bind(this);
@@ -36,9 +36,9 @@ class Assignments extends React.Component {
 
   submitGrade() {
     var data = {
-      studentName: this.state.studentName,
-      Ass_Id: this.state.currentAssignment.id,
-      Grade: this.state.grade
+      student_id: this.state.studentId,
+      id_assignment: this.state.currentAssignment.id,
+      grade: this.state.grade
     };
     var config = {
       headers: {'Authorization': window.localStorage.accessToken},
@@ -58,7 +58,7 @@ class Assignments extends React.Component {
 
   submitAssignment() {
     var data = {
-      name: this.state.studentName,
+      name: this.state.assignmentName,
       classId: this.props.classId
     };
     var config = {
@@ -79,7 +79,6 @@ class Assignments extends React.Component {
       <FlatButton label="Cancel" primary={true} onTouchTap={ e => this.changeProp('showGradeModal', false) } />,
       <FlatButton label="Submit" primary={true} onTouchTap={this.submitGrade} />
     ];
-
     var assignmentForm = 
       <form>
         <label>Assignment Name:
@@ -104,7 +103,7 @@ class Assignments extends React.Component {
           <Dialog title="Add a Grade" actions={gradeActions} modal={true} open={this.state.showGradeModal}>
             <form>
               Select Student
-              <select onChange={ e => this.changeProp('studentName', e.target.value) } >
+              <select onChange={ e => this.changeProp('studentId', e.target.value) } >
                 {
                  this.props.students.map((element, index) => {
                     return <option key={index} value={element.id}>{element.F_Name + ' ' + element.L_Name}</option>

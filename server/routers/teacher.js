@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pg = require('../../psql-database');
+var unassignedPg = require('../../psql-database/UNASSIGNED.js');
 const bodyParser = require('body-parser');
 const services = require('../../services');
 const Promise = require('bluebird');
@@ -16,6 +17,7 @@ router.get('/classes', ensureAuthorized, (req, res) => {
   });
 });
 
+
 // EXPECTED REQ.BODY
 // {
 //   name: name,
@@ -30,13 +32,37 @@ router.post('/class/addAssignment', ensureAuthorized, (req, res) => {
   });
 });
 
-router.post('/class/addStudent', ensureAuthorized, (req, res) => {
-  // will add a student to the database
-  res.end(`added ${req.body.F_Name} ${req.body.L_Name} to the database`);
+router.post('/class/addStudentToClass', ensureAuthorized, (req, res) => {
+  unassignedPg.checkIfStudentExists(req.body.studentData.firstName, req.body.studentData.lastName)
+  .then((student) => {
+    if (student) {
+      return student;
+    } else {
+      return pg.insertStudent(req.body.studentData);
+    }
+  })
+  .then((student) => {
+    return pg.insertClassStudent(req.body.classId, student.id);
+  })
+  .then((classStudent) => {
+    var obj = {
+      id: classStudent.id,
+      F_Name: req.body.studentData.firstName,
+      L_Name: req.body.studentData.lastName,
+      grades: []
+    };
+    console.log('this is the class student', classStudent);
+    res.end(JSON.stringify(obj));
+  });
 }); 
 
 router.post('/class/addGrade', ensureAuthorized, (req, res) => {
-  res.end(`added the assignment grade for the assignment id ${req.body.Ass_Id} with a grade of ${req.body.Grade} for student ${req.body.studentName} `);
+  req.body.student_id = 1;
+  req.body.id_assignment = 1;
+  pg.insertGrade(req.body)
+    .then((grade) => {
+      res.end(grade);
+    });
 });
 
 router.post('/addClass', ensureAuthorized, (req, res) => {
@@ -89,6 +115,11 @@ router.get('/class', ensureAuthorized, (req, res) => {
       }]
     }
   ];
+
+  var obj = {
+    first_name: 'Oliver',
+    last_name: 'Ullman'
+  };
 
   var assignments = [
     {
@@ -149,5 +180,6 @@ router.get('/class', ensureAuthorized, (req, res) => {
   };
   res.end(JSON.stringify(obj));
 });
+
 
 module.exports = router;
