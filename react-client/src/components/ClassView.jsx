@@ -11,6 +11,10 @@ class ClassView extends React.Component {
     let currentToken = window.localStorage.accessToken;
 
     let config = {
+      params: {
+        classId: this.props.classId,
+        studentId: this.props.studentId
+      },
       headers: {'Authorization': currentToken}
     };
 
@@ -27,6 +31,7 @@ class ClassView extends React.Component {
   }
 
   render () {
+    console.log('CLASS VIEW PROPS: ',this.props)
     return (
       <div>
         <h1>ClassView</h1>

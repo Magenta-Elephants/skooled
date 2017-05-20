@@ -103,7 +103,8 @@ module.exports = {
   },
 
   selectStudent : (id_student, callback) => {
-    Student.forge({id: id_student})
+    Student.forge()
+    .query('where', {id: id_student})
     .fetch({required: true})
     .then(student => {
       callback(null, student);
@@ -208,7 +209,7 @@ module.exports = {
   retrieveStudentClasses : (id_student, callback) => {
     ClassStudent.forge()
       .query('where', {id_student: id_student})
-      .fetchAll({require: true})
+      .fetchAll({required: true})
       .then(studentClasses => {
         callback(null, studentClasses);
       })
@@ -221,7 +222,7 @@ module.exports = {
   retrieveClass : (id_class, callback) => {
     Class.forge()
       .query('where', {id: id_class})
-      .fetchAll({require: true})
+      .fetchAll({required: true})
       .then(classes => {
         callback(null, classes);
       })
@@ -308,7 +309,7 @@ module.exports = {
   retrieveClassAssignments : (id_class, callback) => {
     Assignment.forge()
       .query('where', {id_class: id_class})
-      .fetchAll({require: true})
+      .fetchAll({required: true})
       .then(assignments => {
         callback(null, assignments);
       })
@@ -321,7 +322,7 @@ module.exports = {
   retrieveStudentAssignmentGrade : (id_assignment, id_student, callback) => {
     Grade.forge()
       .query({where: {id_assignment: id_assignment}, andWhere: {id_student: id_student}})
-      .fetchAll({require: true})
+      .fetchAll({required: true})
       .then(grades => {
         callback(null, grades);
       })
@@ -334,7 +335,7 @@ module.exports = {
   retrieveAssignmentGrade : (id_assignment, callback) => {
     Grade.forge()
       .query('where', {id_assignment: id_assignment})
-      .fetchAll({require: true})
+      .fetchAll({required: true})
       .then(grades => {
         callback(null, grades);
       })
