@@ -53,6 +53,18 @@ module.exports = {
     });
   },
 
+  checkIfStudentExists : (first_name, last_name) => {
+    return Student.forge({ first_name: first_name, last_name: last_name })
+      .fetch()
+      .then((student) => {
+        console.log('there was no error', student);
+        return student;
+      })
+      .catch((err) => {
+        console.log('there was an error!', err)
+      });
+  },
+
   retrieveStudentWithGrades : (student) => {
     return Student.forge(student)
     .fetch({ required: true, withRelated: ['grades'] })
@@ -215,6 +227,18 @@ module.exports = {
       })
       .catch(error => {
         callback(error, null);
+      })
+  },
+
+  retrieveClasses : (data, callback) => {
+    Class.forge()
+      .query('where', { id_user: data.id_user })
+      .fetchAll({ require: true })
+      .then(results => {
+        callback(null, results);
+      })
+      .catch(err => {
+        callback(err, null);
       })
   },
 
