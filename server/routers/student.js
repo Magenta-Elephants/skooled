@@ -36,7 +36,7 @@ router.get('/classes', ensureAuthorized, (req, res) => {
 
   retrieveStudentClassesAsync(studentId)
     .then(studentClasses => {
-      // console.log('STUDENT CLASSES: ', studentClasses);
+      console.log('STUDENT CLASSES: ', studentClasses.models[0].attributes.id_class);
       return retrieveClassAsync(studentClasses.models[0].attributes.id_class)
     })
     .then(classInfo => {

@@ -42,13 +42,13 @@ class App extends React.Component {
               <Route exact path="/classes/:id" render={innerProps => (
                 <TeacherClass id={innerProps.match.params.id} />
               )} />
-            <Route name="students" path="/students" component={() => (
+            <Route name="students" exact path="/students" component={() => (
               <StudentsList 
                 userType={this.props.userType} 
                 userFirstName={this.props.firstName}
               /> 
             )} />
-            <Route name="studentView" path="/students/:studentId" render={innerProps => (
+            <Route name="studentView" exact path="/students/:studentId" render={innerProps => (
               <StudentView studentId={innerProps.match.params.studentId} />
             )} />
             <Route name="classView" exact path="/students/:studentId/class/:classId" render={innerProps => (
