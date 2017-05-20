@@ -13,6 +13,7 @@ class TeacherClass extends React.Component {
       assignments: []
     }
     this.handleChange = this.handleChange.bind(this);
+    this.addStudent = this.addStudent.bind(this);
   }
 
   componentWillMount() {
@@ -41,12 +42,20 @@ class TeacherClass extends React.Component {
     });
   }
 
+  addStudent(student) {
+    var students = this.state.students;
+    students.push(student);
+    this.setState({
+      students: students
+    });
+  }
+
   render() {
     return (
       <div className="col-md-10 col-md-offset-1">
         <Tabs value={this.state.currentTab} onChange={this.handleChange} >
           <Tab label="Students" value="Students">
-            <Students students={this.state.students} />
+            <Students classId={this.props.id} students={this.state.students} addStudent={this.addStudent} />
           </Tab>
           <Tab label="Assignments" value="Assignments">
             <Assignments classId={this.props.id} assignments={this.state.assignments} students={this.state.students} />

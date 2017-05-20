@@ -67,17 +67,17 @@ router.post('/parent', ensureAuthorized, (req, res) => {
 
 
 router.post('/student', ensureAuthorized, (req, res) => {
-
-  pg.insertStudent(req.body, (error, data) => {
-    if (error) {
-      console.error('Error inserting new student info to db.', error);
-      res.sendStatus(500);
-    } else {
-      // Create the relationship in the join table for 'teacher' and Student
-      pg.insertUserStudent(req.decoded.id, data.toJSON().id);
-      res.sendStatus(200);
-    }
-  });
+  pg.insertStudent(req.body)
+    .then((error, data) => {
+      if (error) {
+        console.error('Error inserting new student info to db.', error);
+        res.sendStatus(500);
+      } else {
+        // Create the relationship in the join table for 'teacher' and Student
+        pg.insertUserStudent(req.decoded.id, data.toJSON().id);
+        res.sendStatus(200);
+      }
+    });
 });
 
 router.post('/class', ensureAuthorized, (req, res) => {

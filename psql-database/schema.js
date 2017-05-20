@@ -62,7 +62,7 @@ module.exports = function (knex, Promise) {
       return knex.schema.createTable('grades', (table) => {
         table.increments('id');
         table.integer('id_assignment').references('assignments.id');
-        table.integer('id_student').references('students.id');
+        table.integer('student_id').references('students.id');
         table.string('grade', 250);
     }).catch((error) => {
       console.log('grades database error:', error)

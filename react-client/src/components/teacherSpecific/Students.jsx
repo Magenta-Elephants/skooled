@@ -29,16 +29,20 @@ class Students extends React.Component {
 
   handleSubmit() {
     var data = {
-      F_Name: this.state.firstName,
-      L_Name: this.state.lastName
+      studentData: {
+        firstName: this.state.firstName,
+        lastName: this.state.lastName 
+      },
+      classId: this.props.classId
     };
     var config = {
       headers: {'Authorization': window.localStorage.accessToken},
     };
 
-    axios.post('/teacher/class/addStudent', data, config)
+    axios.post('/teacher/class/addStudentToClass', data, config)
       .then((response) => {
         console.log('success!', response);
+        this.props.addStudent(response.data);
       })
       .catch((err) => {
         console.log('error!', err);
