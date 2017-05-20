@@ -21,7 +21,7 @@ class Student extends React.Component {
     return (
       <div className="stud">
         <h3 onClick={ () => this.goToStudentView(this.props.student.id)} >
-          {this.props.student.name}
+          {this.props.student.first_name}
         </h3>
       </div>
     )

@@ -6,7 +6,12 @@ class StudentView extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      classes: []
+      classes: [{
+          id: 0,
+          name: 'Math',
+          decription: 'we do math',
+          id_user: 1
+        }]
     }
   }
 
@@ -14,13 +19,21 @@ class StudentView extends React.Component {
     let currentToken = window.localStorage.accessToken;
 
     let config = {
+      params: {studentId: this.props.studentId},
       headers: {'Authorization': currentToken}
     };
 
     axios.get('/students/classes', config)
     .then(studentClasses => {
+      console.log('STUDENT CLASSES: ', studentClasses);
       this.setState({
-        classes: studentClasses.data
+        classes: [{
+          id: 0,
+          name: 'Math',
+          decription: 'we do math',
+          id_user: 1
+        }]
+        // classes: [studentClasses.data]
       });
       console.log('Success from GET /students/classes');
     })

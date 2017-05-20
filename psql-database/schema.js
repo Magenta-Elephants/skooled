@@ -23,7 +23,6 @@ module.exports = function (knex, Promise) {
         table.increments('id');
         table.string('first_name', 80);
         table.string('last_name', 80);
-        table.integer('id_class').references('classes.id');
       }).catch((error) => {
         console.log('students database error:', error);
       });

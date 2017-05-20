@@ -15,7 +15,7 @@ class StudentsList extends React.Component {
     };
     // this.renderRedirect = this.renderRedirect.bind(this);
     let currentToken = window.localStorage.accessToken;
-    console.log('currentToken', currentToken);
+    // console.log('currentToken', currentToken);
   }
 
   componentDidMount () {
@@ -28,7 +28,7 @@ class StudentsList extends React.Component {
     axios.get('/students', config)
     .then(studs => {
       this.setState({
-        students: studs.data
+        students: [studs.data]
       });
     })
     .catch(error => {

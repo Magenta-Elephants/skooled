@@ -12,75 +12,111 @@ router.use(bodyParser.json());
 router.get('', ensureAuthorized, (req, res) => {
   var userId = req.decoded.id;
 
-  var obj = [
-    { id: 2, name: 'Stacy'},
-    { id: 4, name: 'TK'},
-    { id: 7, name: 'Michael Denny'}
-  ];
+  var retrieveSelectedUsersStudentsAsync = Promise.promisify(pg.retrieveSelectedUsersStudents);
+  var selectStudentAsync = Promise.promisify(pg.selectStudent);
 
-  res.send(obj);
+  retrieveSelectedUsersStudentsAsync(userId)
+    .then(userStudentEntry => {
+      return selectStudentAsync(userStudentEntry.models[0].attributes.id_student) 
+    })
+    .then(student => {
+        res.json(student.attributes);
+    })  
+    .catch(error => {
+      res.sendStatus(500);
+    })
 });
 
 router.get('/classes', ensureAuthorized, (req, res) => {
   var userId = req.decoded.id;
+  var studentId = req.query.studentId;
 
-  var classes = [
-    {
-      id: 1,
-      name: 'Reading',
-      assignments: {
-        1: 'Reading - Pop Quiz 1',
-        2: 'Reading - Test1',
-        3: 'Reading - Midterm',
-        4: 'Reading - Final'
-      },
-      students: {
-        2: 2
-      }
-    },
-    {
-      id: 2,
-      name: 'Riting',
-      assignments: {
-        1: 'Riting - Pop Quiz 1',
-        2: 'Riting - Test1',
-        3: 'Riting - Midterm',
-        4: 'Riting - Final'
-      },
-      students: {
-        4: 4
-      }
-    },
-    {
-      id: 3,
-      name: 'Rithmatic',
-      assignments: {
-        1: 'Rithmatic - Pop Quiz 1',
-        2: 'Rithmatic - Test1',
-        3: 'Rithmatic - Midterm',
-        4: 'Rithmatic - Final'
-      },
-      students: {
-        4: 4,
-        7: 7
-      }
-    },
-    {
-      id: 3,
-      name: 'Basket Weaving',
-      assignments: {
-        1: 'Not a Pop Quiz 1',
-        2: 'Not a Test1',
-        3: 'Not a Midterm',
-        4: 'Not a Final'
-      },
-      students: {
-        2: 2
-      }
-    }
-  ];
+  var retrieveStudentClassesAsync = Promise.promisify(pg.retrieveStudentClasses);
+  var retrieveClassAsync = Promise.promisify(pg.retrieveClass);
 
-  res.send(classes);
+  retrieveStudentClassesAsync(studentId)
+    .then(studentClasses => {
+      // console.log('STUDENT CLASSES: ', studentClasses);
+      return retrieveClassAsync(studentClasses.models[0].attributes.id_class)
+    })
+    .then(classInfo => {
+      res.json(classInfo.attributes);
+    })
+    .catch(error => {
+      res.sendStatus(500);
+    })
+})
+
+
+router.get('/classDetail', ensureAuthorized, (req, res) => {
+  var specificStudentGrades = [];
+  var allAssignmentsGrades = [];
+  var classAssignments = [];
+  var classId = req.query.classId;
+  var studentId = req.query.studentId;
+  // console.log('CLASS ID: ', classId);
+  // console.log('STUDENT ID: ', studentId);
+
+  var retrieveClassAssignmentsAsync = Promise.promisify(pg.retrieveClassAssignments);
+  var retrieveAssignmentGradeAsync = Promise.promisify(pg.retrieveAssignmentGrade);
+  var retrieveStudentAssignmentGradeAsync = Promise.promisify(pg.retrieveStudentAssignmentGrade);
+
+  retrieveClassAssignmentsAsync(classId)
+    .then(assignments => {
+      // console.log('\nASSIGNMENTS 1: ', assignments.models); 
+      for (var i = 0; i < assignments.models.length; i++) {
+        classAssignments.push(assignments.models[i].attributes);
+        if (classAssignments.length === assignments.models.length) {
+          return classAssignments;
+        }
+      }
+    })
+    .then(assignments => {
+      for (var i = 0; i < assignments.length; i++) {
+
+        pg.retrieveAssignmentGrade(classAssignments[i].id, (error, grade) => {
+          if (error) {
+            // console.log('RETRIEVE ASSIGNMENT GRADE ERROR: ', error);
+          } else {
+          // console.log('\nGRADE 1: ', grade.models);
+            var assignmentGrades = [];
+            for (var k = 0; k < grade.models.length; k++) {
+              // console.log('\nGRADE MODEL: ', grade.models[k].attributes)
+              assignmentGrades.push(grade.models[k].attributes);
+              if (assignmentGrades.length === grade.models.length) {
+                // console.log('\nASSIGNMENT GRADES: ', assignmentGrades);
+                allAssignmentsGrades.push(assignmentGrades);
+              }
+            }
+            // it's skipping down immediately !!! why?
+            if (allAssignmentsGrades.length === classAssignments.length) {
+              // console.log('\nALL ASSIGNMENTS GRADES: ', allAssignmentsGrades);
+              for (var i = 0; i < allAssignmentsGrades.length; i++) {
+                classAssignments[i].allGrades = allAssignmentsGrades[i];
+                
+                if (i === classAssignments.length -1) {
+                  // console.log('CLASS ASSIGNMENTS: ', classAssignments)
+                  for (var p = 0; p < classAssignments.length; p++) {
+                    pg.retrieveStudentAssignmentGrade(classAssignments[p].id, studentId, (error, grade) => {
+                      // console.log('\nGRADE 2: ', grade);
+                      specificStudentGrades.push(grade.models[0].attributes);
+
+                      if (specificStudentGrades.length === classAssignments.length) {
+                        res.json([specificStudentGrades, classAssignments]);
+                      }
+                    })
+                  }
+                }
+              }
+            }
+          }
+        })
+      }
+    })
+    .catch(error => {
+      console.log('CLASS DETAIL - RETRIEVE CLASS ASSIGNMENTS ERROR: ', error)
+      res.sendStatus(500);
+    })
 })
 
 // router.get('/students', ensureAuthorized, (req, res) => {

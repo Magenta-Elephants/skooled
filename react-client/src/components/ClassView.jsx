@@ -11,11 +11,17 @@ class ClassView extends React.Component {
     let currentToken = window.localStorage.accessToken;
 
     let config = {
+      params: {
+        classId: this.props.classId,
+        studentId: this.props.studentId
+      },
       headers: {'Authorization': currentToken}
     };
 
     axios.get('/students/classDetail', config)
     .then(studentClasses => {
+      console.log('STUDENT CLASSES: ', studentClasses.data)
+      // studentClasses.data = [[current students grades for all assignments], [all assignments with all students grades]]
       this.setState({
         classes: studentClasses.data
       });
@@ -27,6 +33,7 @@ class ClassView extends React.Component {
   }
 
   render () {
+    console.log('CLASS VIEW PROPS: ',this.props)
     return (
       <div>
         <h1>ClassView</h1>
