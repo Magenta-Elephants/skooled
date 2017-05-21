@@ -49,8 +49,10 @@ class App extends React.Component {
               /> 
             )} />
             <Route name="studentView" exact path="/students/:studentId" render={innerProps => (
-              <StudentView studentId={innerProps.match.params.studentId} />
-            )} />
+              <StudentView 
+                studentId={innerProps.match.params.studentId} 
+                /> )} 
+              />
             <Route name="classView" exact path="/students/:studentId/class/:classId" render={innerProps => (
               <ClassView 
                 classId={innerProps.match.params.classId} 

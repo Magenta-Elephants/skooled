@@ -20,11 +20,10 @@ class StudentView extends React.Component {
 
     axios.get('/students/classes', config)
     .then(studentClasses => {
-      // console.log('STUDENT CLASSES: ', studentClasses);
       this.setState({
-        classes: [studentClasses.data]
+        classes: studentClasses.data
       });
-      console.log('Success from GET /students/classes');
+      console.log('Success from GET /students/classes DOOODOO');
     })
     .catch(error => {
       console.log('Error from GET /students/classes', error);
@@ -35,13 +34,14 @@ class StudentView extends React.Component {
     return (
       <div className="StudentView">
         <h1>Student View</h1>
-        <h2>Student ID: {this.props.studentId}</h2>
+        <h2>Student ID: {this.props.studentFirstName}</h2>
         <h3>classes:</h3>
         {this.state.classes.map((studentClass, index) => 
           <Class 
-            class={studentClass} 
+            className={studentClass.name} 
             key={index}
             studentId={this.props.studentId}
+            class={studentClass}
           />
         )}
       </div>

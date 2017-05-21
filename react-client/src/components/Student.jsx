@@ -16,12 +16,12 @@ class Student extends React.Component {
 
   render () {
     if (this.state.redirectToClass !== false) {
-      return (<Redirect to={/students/ + this.state.redirectToClass} />)
+      return (<Redirect to={/students/ + this.state.redirectToClass} firstName={this.props.student} />)
     }
     return (
       <div className="stud">
         <h3 onClick={ () => this.goToStudentView(this.props.student.id)} >
-          {this.props.student.first_name}
+          {this.props.student.first_name} {this.props.student.last_name}
         </h3>
       </div>
     )
