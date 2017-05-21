@@ -10,10 +10,10 @@ const ensureAuthorized = services.ensureAuth;
 router.use(bodyParser.json());
 
 router.get('/classes', ensureAuthorized, (req, res) => {
-  pg.retrieveClasses({ id_user: req.decoded.id }, (err, classes) => {
-    if (err) res.end(err);
-    res.end(JSON.stringify(classes));
-  });
+    pg.retrieveTeacherClasses(req.decoded.id, (err, classes) => {
+        if (err) res.end(err);
+        res.json(classes);
+    });
 });
 
 
@@ -25,13 +25,14 @@ router.get('/classes', ensureAuthorized, (req, res) => {
 
 // ME: TEACHER CREATES ASSIGNMENT FOR ENTIRE CLASS
 router.post('/class/addAssignment', ensureAuthorized, (req, res) => {
-  // Teacher creates an assignment for an entire class.
-  pg.insertAssignment(req.body, assignment => {
-    res.end(JSON.stringify(assignment));
-  });
+    // Teacher creates an assignment for an entire class.
+    pg.insertAssignment(req.body, assignment => {
+        res.end(JSON.stringify(assignment));
+    });
 });
 
 router.post('/class/addStudentToClass', ensureAuthorized, (req, res) => {
+
   pg.checkIfStudentExists(req.body.studentData.firstName, req.body.studentData.lastName)
   .then((student) => {
     if (student) {
@@ -56,128 +57,80 @@ router.post('/class/addStudentToClass', ensureAuthorized, (req, res) => {
 }); 
 
 router.post('/class/addGrade', ensureAuthorized, (req, res) => {
-  req.body.student_id = 1;
-  req.body.id_assignment = 1;
-  pg.insertGrade(req.body)
-    .then((grade) => {
-      res.end(grade);
-    });
+    req.body.student_id = 1;
+    req.body.id_assignment = 1;
+    pg.insertGrade(req.body)
+        .then((grade) => {
+            res.end(grade);
+        });
 });
 
 router.post('/addClass', ensureAuthorized, (req, res) => {
-  req.body.userId = req.decoded.id;
-  pg.insertClass(req.body, (err, insertedClass) => {
-    if (err) res.end(err);
-    res.end(JSON.stringify(insertedClass));
-  });
+    req.body.userId = req.decoded.id;
+    pg.insertClass(req.body, (err, insertedClass) => {
+        if (err) res.end(err);
+        res.end(JSON.stringify(insertedClass));
+    });
 });
 
 router.get('/class', ensureAuthorized, (req, res) => {
-  var students = [
-    { id: 1, 
-      F_Name: 'Oliver',
-      L_Name: 'Ullman',
-      grades: [{
-        Ass_Id: 2,
-        Name: 'Math Shit',
-        Grade: 81
-      }, {
-        Ass_Id: 0,
-        Name: 'Reading Log',
-        Grade: 81
-      }]
-    },
-    { id: 8, 
-      F_Name: 'Michael',
-      L_Name: 'Shymershiem',
-      grades: [{
-        Ass_Id: 2,
-        Name: 'Math Shit',
-        Grade: 88
-      }, {
-        Ass_Id: 0,
-        Name: 'Reading Log',
-        Grade: 10
-      }]
-    },
-    { id: 8, 
-      F_Name: 'Ali',
-      L_Name: 'Elgiadi',
-      grades: [{
-        Ass_Id: 2,
-        Name: 'Math Shit',
-        Grade: 91
-      }, {
-        Ass_Id: 0,
-        Name: 'Reading Log',
-        Grade: 69
-      }]
-    }
-  ];
+    var classId = req.query.classId;
+    var classStudentsGrades = [];
+    var classAssignments = [];
+    var classStudents = [];
 
-  var obj = {
-    first_name: 'Oliver',
-    last_name: 'Ullman'
-  };
+    var retrieveSelectedClassStudentsAsync = Promise.promisify(pg.retrieveSelectedClassStudents);
 
-  var assignments = [
-    {
-      id: 4,
-      Name: 'Math Shit',
-      grades: [{
-        F_Name: 'Oliver',
-        L_Name: 'Ullman',
-        Grade: 62
-      }, {
-        F_Name: 'Ali',
-        L_Name: 'Elgiadi',
-        Grade: 83
-      }, {
-        F_Name: 'Michael',
-        L_Name: 'Shermershiem',
-        Grade: 86
-      }]
-    },
-    {
-      id: 9,
-      Name: 'Reading Log',
-      grades: [{
-        F_Name: 'Oliver',
-        L_Name: 'Ullman',
-        Grade: 74
-      }, {
-        F_Name: 'Ali',
-        L_Name: 'Elgiadi',
-        Grade: 24
-      }, {
-        F_Name: 'Michael',
-        L_Name: 'Shermershiem',
-        Grade: 96
-      }]
-    }
-  ];
-  // var obj = {};
-  // pg.retrieveSelectedClassStudents(req['headers'].class_id, (students) => {
-  //   console.log('these are the students', students);
-  //   obj.students = students;
-  //   if (obj.assignments) {
-  //     res.end(JSON.stringify(students));
-  //   }
-  // });
-
-  // pg.retreiveClassAssignments(req['headers'].class_id, (assignments) => {
-  //   console.log('these are the assignments', assignments);
-  //   obj.assignments = assignments;
-  //   if (obj.students) {
-  //     res.end(JSON.stringify(obj));
-  //   }
-  // });
-
-  var obj = {
-    students: students,
-    assignments: assignments
-  };
-  res.end(JSON.stringify(obj));
+    retrieveSelectedClassStudentsAsync(classId)
+        .then(students => {
+            for (var i = 0; i < students.models.length; i++) {
+                pg.selectStudent(students.models[i].attributes.id_student, (error, student) => {
+                    if (error) {
+                        console.log('SELECT STUDENT ERROR: ', error);
+                    } else {
+                        classStudents.push(student.attributes)
+                        if (classStudents.length === students.models.length) {
+                            for (var k = 0; k < classStudents.length; k++) {
+                                pg.retrieveStudentWithGrades(classStudents[k], (error, student) => {
+                                    if (error) {
+                                        console.log('ERROR RETRIEVE STUDENT WITH GRADES: ', error);
+                                    } else {
+                                        student.attributes.grades = [];
+                                        for (var b = 0; b < student.relations.grades.models.length; b++) {
+                                            student.attributes.grades.push(student.relations.grades.models[b].attributes);
+                                            if (student.attributes.grades.length === student.relations.grades.models.length) {
+                                                classStudentsGrades.push(student.attributes.grades);
+                                                if (classStudentsGrades.length === classStudents.length) {
+                                                    for (var w = 0; w < classStudents.length; w++) {
+                                                        classStudents[w].grades = [];
+                                                        classStudents[w].grades.push(classStudentsGrades[w]);
+                                                        if (w === classStudents.length - 1) {
+                                                            console.log('STUDENTS WITH GRADES: ', classStudents[0].grades);
+                                                            pg.retrieveClassAssignments(classId, (error, assignments) => {
+                                                                console.log(assignments.models[0].attributes)
+                                                                for (var u = 0; u < assignments.models.length; u++) {
+                                                                    classAssignments.push(assignments.models[u].attributes);
+                                                                    if (classAssignments.length === assignments.models.length) {
+                                                                        res.json({ students: classStudents, assignments: classAssignments });
+                                                                    }
+                                                                }
+                                                            })
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                })
+            }
+        })
+        .catch(error => {
+            console.log('ERROR WITH GET /class : ', error)
+        })
 });
 
 
