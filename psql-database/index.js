@@ -65,13 +65,16 @@ module.exports = {
       });
   },
 
-  retrieveStudentWithGrades : (student) => {
-    return Student.forge(student)
+
+  retrieveStudentWithGrades : (student, callback) => {
+    Student.forge(student)
     .fetch({ required: true, withRelated: ['grades'] })
     .then((student) => {
-      console.log('this is the student', student);
+      callback(null, student);
+      // console.log('this is the student', student);
     })
     .catch((err) => {
+      callback(err, null);
       console.log('there was an error!', err);
     });
   },
@@ -259,7 +262,7 @@ module.exports = {
   retrieveTeacherClasses : (id_user, callback) => {
     Class.forge()
       .query('where', {id_user: id_user})
-      .fetchAll({require: true})
+      .fetchAll({required: true})
       .then(teacherClasses => {
         callback(null, teacherClasses);
       })
@@ -272,15 +275,9 @@ module.exports = {
   retrieveSelectedClassStudents : (id_class, callback) => {
     ClassStudent.forge()
       .query('where', {id_class: id_class})
-      .fetchAll({required: true, withRelated: ['students']})
+      .fetchAll({required: true})
       .then(classStudentEntry => {
-        var result = classStudentEnt
-        callback(null, classStudentEntry.models);
-        for (let i = 0; i < classStudentEntry.models.length; i++) {
-          module.exports.retrieveGradesForStudent(classStudentEntry.models[i].id)
-            .then((grades) => {
-            });
-        }
+        callback(null, classStudentEntry);
       })
       .catch(error => {
         console.log('there was an error', error);
@@ -345,10 +342,10 @@ module.exports = {
   // ME: FETCH GRADE FOR A SPECIFIC ASSIGNMENT AND STUDENT
   retrieveStudentAssignmentGrade : (id_assignment, id_student, callback) => {
     Grade.forge()
-      .query({where: {id_assignment: id_assignment}, andWhere: {id_student: id_student}})
+      .query({where: {id_assignment: id_assignment}, andWhere: {student_id: id_student}})
       .fetchAll({required: true})
       .then(grades => {
-        console.log('got to the right one!!', grades)
+        // console.log('got to the right one!!', grades)
         callback(null, grades);
       })
       .catch(error => {
