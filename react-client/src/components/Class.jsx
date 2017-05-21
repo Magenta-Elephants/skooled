@@ -23,7 +23,6 @@ class Class extends React.Component {
         <h3 onClick={ () => this.goToClassView(this.props.class.id)}>
           {this.props.class.name}
         </h3>
-        <p>Grade:</p>
       </div>
     )
   }

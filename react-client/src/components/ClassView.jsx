@@ -1,14 +1,14 @@
 import React from 'react';
 import axios from 'axios';
+import StudentClassChart from './StudentClassChart.jsx';
 
 class ClassView extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       assignmentData: [],
-      assignmentsName: '',
-      assignmentsGrade: '',
-      overallGrade: ''
+      currentClass: { grades: [] },
+      overallGrade: null
     }
   }
 
@@ -37,6 +37,8 @@ class ClassView extends React.Component {
     .catch(error => {
       console.log('Error from GET /students/classes', error);
     });
+  
+
   }
 
   getThisStudentsOverallGrade () {
@@ -47,7 +49,9 @@ class ClassView extends React.Component {
       total += parseInt(gradeArray[i].grade);
     }
 
-    this.setState({overallGrade: total / gradeArray.length}) 
+    var overallGrade = total / gradeArray.length;
+
+    this.setState({overallGrade: overallGrade}) 
   }
 
   render () {
@@ -56,11 +60,16 @@ class ClassView extends React.Component {
       <div>
         <h1>ClassView</h1>
         <h2>Class ID: {this.props.classId}</h2>
-        <h2>overall grade: {this.getThisStudentsOverallGrade}</h2>
+        <h2 onClick={ () => this.getThisStudentsOverallGrade()} >
+          overall grade: {this.state.overallGrade}
+        </h2>
         <h3>Past Assignments:</h3>
         {assignmentData.map((assgn, index) =>
-          <h4 key={index}>{assgn.name}</h4> 
-        )}      
+          <h4 key={index}>{index}: {assgn.name}</h4> 
+        )}
+        <div className="displayedGraph">
+          <StudentClassChart type="Class" item={this.state.currentClass} />
+        </div>
       </div>
     )
   }
