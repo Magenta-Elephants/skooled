@@ -8,7 +8,8 @@ class ClassView extends React.Component {
     this.state = {
       assignmentData: [],
       overallGrade: null,
-      eachGrade: []
+      eachGrade: [],
+      class: {}
     }
   }
 
@@ -34,7 +35,16 @@ class ClassView extends React.Component {
       console.log('Error from GET /students/classes', error);
     });
   
-
+    axios.get('/students/classes', config)
+    .then(studentClasses => {
+      this.setState({
+        class: studentClasses.data[0]
+      });
+      console.log('Success from GET /students/classes DOOODOO');
+    })
+    .catch(error => {
+      console.log('Error from GET /students/classes', error);
+    });
   }
 
   getThisStudentsOverallGrade () {
@@ -68,7 +78,7 @@ class ClassView extends React.Component {
     return (
       <div>
         <h1>ClassView</h1>
-        <h2>Class ID: {this.props.classId}</h2>
+        <h2>Class : {this.state.class.name}</h2>
         <h2 onClick={ () => this.getThisStudentsOverallGrade()} >
           overall grade: {this.state.overallGrade || 'click to reveal'}
         </h2>

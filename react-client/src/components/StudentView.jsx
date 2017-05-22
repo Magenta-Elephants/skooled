@@ -6,7 +6,8 @@ class StudentView extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      classes: []
+      classes: [],
+      student: {}
     }
   }
 
@@ -28,13 +29,23 @@ class StudentView extends React.Component {
     .catch(error => {
       console.log('Error from GET /students/classes', error);
     });
+
+    axios.get('/students', config)
+    .then(studs => {
+      this.setState({
+        student: studs.data
+      });
+    })
+    .catch(error => {
+      console.log('Error back from GET /students request.', error);
+    });
   }
 
   render () {
     return (
       <div className="StudentView">
         <h1>Student View</h1>
-        <h2>Student ID: {this.props.studentFirstName}</h2>
+        <h2>Student: {this.state.student.first_name}</h2>
         <h3>classes:</h3>
         {this.state.classes.map((studentClass, index) => 
           <Class 
