@@ -11,23 +11,12 @@ class StudentClassChart extends React.Component {
 
     var config = {
       title: {
-        text: 'Class'
+        text: `Grades for ${this.props.studentName} per Assignment`
       },
       chart: {
        type: 'column',
         width: 550 
       },
-    tooltip: {
-      formatter: function() {
-        var final = 'Students:';
-        // for each object in data 
-        this.point.data.forEach((el) => {
-          final += '<br>' + el.name + ': ' + el.grade; 
-        });
-
-        return final;
-      }
-    },
     xAxis: {
       categories: ['Assgnmnt 0', '1', '2', '3', '4', '5']
     },

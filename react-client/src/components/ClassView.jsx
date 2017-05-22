@@ -9,7 +9,8 @@ class ClassView extends React.Component {
       assignmentData: [],
       overallGrade: null,
       eachGrade: [],
-      class: {}
+      class: {},
+      student: {}
     }
   }
 
@@ -44,6 +45,16 @@ class ClassView extends React.Component {
     })
     .catch(error => {
       console.log('Error from GET /students/classes', error);
+    });
+
+    axios.get('/students', config)
+    .then(studs => {
+      this.setState({
+        student: studs.data
+      });
+    })
+    .catch(error => {
+      console.log('Error back from GET /students request.', error);
     });
   }
 
@@ -80,17 +91,21 @@ class ClassView extends React.Component {
         <h1>ClassView</h1>
         <h2>Class : {this.state.class.name}</h2>
         <h2 onClick={ () => this.getThisStudentsOverallGrade()} >
-          overall grade: {this.state.overallGrade || 'click to reveal'}
+          Overall Grade: {this.state.overallGrade || '[click]'}
         </h2>
         <h3>Past Assignments:</h3>
         {assignmentData.map((assgn, index) =>
-          <h4 key={index}>{index}: {assgn.name}</h4> 
+          <h4 key={index}>{index}: {assgn.name}</h4>  
         )}
         <h3 onClick={ () => this.getStudentsGradeEachAssignment()} >
-          Chart Grades
+          Chart Grades [click]
         </h3>
         <div className="displayedGraph">
-          <StudentClassChart type="Class" grades={this.state.eachGrade} />
+          <StudentClassChart type="Class" 
+            grades={this.state.eachGrade} 
+            studentId={this.props.studentId}
+            studentName={this.state.student.first_name}
+          />
         </div>
       </div>
     )
