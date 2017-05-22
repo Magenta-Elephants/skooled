@@ -19,10 +19,28 @@ class TeacherClass extends React.Component {
   convertAssignments(assignments, students) {
     for (var t = 0; t < assignments.length; t++) {
       var assignment = assignments[t].id;
+      // console.log('HERE 1')
       assignments[t].grades = []
       for (var s = 0; s < students.length; s++) {
+        // console.log('HERE 2')
         for (var g = 0; g < assignments.length; g++) {
-          if (assignment === students[s].grades[0][g].id_assignment) {
+          // console.log('HERE 3')
+          if (students[s].grades === undefined) {
+            console.log('SHITS undefined')
+              var studGrade = {
+                F_Name: students[s].first_name,
+                L_Name: students[s].last_name,
+                Grade: undefined
+              }
+              assignments[t].grades.push(studGrade);
+              if (t === assignments.length - 1) {
+                this.setState({
+                  students: students,
+                  assignments: assignments
+                })
+              }
+          } else if (assignment === students[s].grades[0][g].id_assignment) {
+            console.log('PASSED THROUGH')
             var studGrade = {
               F_Name: students[s].first_name,
               L_Name: students[s].last_name,
@@ -35,20 +53,40 @@ class TeacherClass extends React.Component {
                 assignments: assignments
               })
             }
+            
           }
         }
       }
     }
   }
 
-  componentWillMount() {
-    var config = {
-      params:{ classId: this.props.id},
-      headers: {'Authorization': window.localStorage.accessToken}
-    };
-    console.log(config);
+  getClassInfo() {
     axios.get('/teacher/class', config)
       .then((response) => {
+        this.setState({
+          students: response.data.students,
+          assignments: response.data.assignments
+        })
+        this.convertAssignments(response.data.assignments, response.data.students);
+      })
+      .catch((err) => {
+        console.log('error!', err);
+      });
+  }
+
+  componentWillMount() {
+
+    var config = {
+      params:{ classId: this.props.id },
+      headers: {'Authorization': window.localStorage.accessToken}
+    };
+    console.log('CONFIG', config);
+    axios.get('/teacher/class', config)
+      .then((response) => {
+        this.setState({
+          students: response.data.students,
+          assignments: response.data.assignments
+        })
         this.convertAssignments(response.data.assignments, response.data.students);
       })
       .catch((err) => {
