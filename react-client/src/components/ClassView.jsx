@@ -7,8 +7,8 @@ class ClassView extends React.Component {
     super(props)
     this.state = {
       assignmentData: [],
-      currentClass: { grades: [] },
-      overallGrade: null
+      overallGrade: null,
+      eachGrade: []
     }
   }
 
@@ -25,14 +25,10 @@ class ClassView extends React.Component {
 
     axios.get('/students/classDetail', config)
     .then(studentClasses => {
-      console.log('STUDENT CLASSES: ', studentClasses.data)
-      // studentClasses.data = [[current students grades for all assignments], [all assignments with all students grades]]
       this.setState({
         assignmentData: studentClasses.data,
-        assignmentsName: studentClasses.data[1][0].name,
-        assignmentsGrade: studentClasses.data[0][0].grade
       });
-      console.log('Success from GET /students/classes POOOOOOOOOOP');
+      console.log('Success from GET /students/classes');
     })
     .catch(error => {
       console.log('Error from GET /students/classes', error);
@@ -54,21 +50,37 @@ class ClassView extends React.Component {
     this.setState({overallGrade: overallGrade}) 
   }
 
+  getStudentsGradeEachAssignment () {
+    var gradeArray = this.state.assignmentData[0];
+    var eachGradeArray = [];
+
+    for (var i = 0; i < gradeArray.length; i++) {
+      eachGradeArray.push(parseInt(gradeArray[i].grade));
+    }
+
+    this.setState({eachGrade: eachGradeArray})
+  }
+
   render () {
     var assignmentData = this.state.assignmentData[1] || [];
+    var thisStudentGrades = this.state.assignmentData[0] || [];
+    var eachGrade = this.state.eachGrade || [];
     return (
       <div>
         <h1>ClassView</h1>
         <h2>Class ID: {this.props.classId}</h2>
         <h2 onClick={ () => this.getThisStudentsOverallGrade()} >
-          overall grade: {this.state.overallGrade}
+          overall grade: {this.state.overallGrade || 'click to reveal'}
         </h2>
         <h3>Past Assignments:</h3>
         {assignmentData.map((assgn, index) =>
           <h4 key={index}>{index}: {assgn.name}</h4> 
         )}
+        <h3 onClick={ () => this.getStudentsGradeEachAssignment()} >
+          Chart Grades
+        </h3>
         <div className="displayedGraph">
-          <StudentClassChart type="Class" item={this.state.currentClass} />
+          <StudentClassChart type="Class" grades={this.state.eachGrade} />
         </div>
       </div>
     )

@@ -53,8 +53,8 @@ router.get('/classDetail', ensureAuthorized, (req, res) => {
   var classAssignments = [];
   var classId = req.query.classId;
   var studentId = req.query.studentId;
-  console.log('CLASS ID: ', classId);
-  console.log('STUDENT ID: ', studentId);
+  // console.log('CLASS ID: ', classId);
+  // console.log('STUDENT ID: ', studentId);
 
   var retrieveClassAssignmentsAsync = Promise.promisify(pg.retrieveClassAssignments);
   var retrieveAssignmentGradeAsync = Promise.promisify(pg.retrieveAssignmentGrade);
@@ -62,7 +62,7 @@ router.get('/classDetail', ensureAuthorized, (req, res) => {
 
   retrieveClassAssignmentsAsync(classId)
     .then(assignments => {
-      console.log('\nASSIGNMENTS 1: ', assignments.models); 
+      // console.log('\nASSIGNMENTS 1: ', assignments.models); 
       for (var i = 0; i < assignments.models.length; i++) {
         classAssignments.push(assignments.models[i].attributes);
         if (classAssignments.length === assignments.models.length) {
@@ -75,33 +75,33 @@ router.get('/classDetail', ensureAuthorized, (req, res) => {
 
         pg.retrieveAssignmentGrade(classAssignments[i].id, (error, grade) => {
           if (error) {
-            console.log('RETRIEVE ASSIGNMENT GRADE ERROR: ', error);
+            // console.log('RETRIEVE ASSIGNMENT GRADE ERROR: ', error);
           } else {
-          console.log('\nGRADE 1: ', grade.models);
+          // console.log('\nGRADE 1: ', grade.models);
             var assignmentGrades = [];
             for (var k = 0; k < grade.models.length; k++) {
-              console.log('\nGRADE MODEL: ', grade.models[k].attributes)
+              // console.log('\nGRADE MODEL: ', grade.models[k].attributes)
               assignmentGrades.push(grade.models[k].attributes);
               if (assignmentGrades.length === grade.models.length) {
-                console.log('\nASSIGNMENT GRADES: ', assignmentGrades);
-                console.log('allAssignmentsGrades length: ', allAssignmentsGrades.length);
-                console.log('classAssignments length', classAssignments.length)
+                // console.log('\nASSIGNMENT GRADES: ', assignmentGrades);
+                // console.log('allAssignmentsGrades length: ', allAssignmentsGrades.length);
+                // console.log('classAssignments length', classAssignments.length)
                 allAssignmentsGrades.push(assignmentGrades);
               }
             }
             // it's skipping down immediately !!! why?
             if (allAssignmentsGrades.length === classAssignments.length) {
-              console.log('\nALL ASSIGNMENTS GRADES: ', allAssignmentsGrades);
+              // console.log('\nALL ASSIGNMENTS GRADES: ', allAssignmentsGrades);
               for (var i = 0; i < allAssignmentsGrades.length; i++) {
                 classAssignments[i].allGrades = allAssignmentsGrades[i];
                 
                 if (i === classAssignments.length -1) {
-                  console.log('CLASS ASSIGNMENTS: ', classAssignments)
+                  // console.log('CLASS ASSIGNMENTS: ', classAssignments)
                   for (var p = 0; p < classAssignments.length; p++) {
                     pg.retrieveStudentAssignmentGrade(classAssignments[p].id, studentId, (error, grade) => {
-                      console.log('\nGRADE 2: ', grade);
+                      // console.log('\nGRADE 2: ', grade);
                       if (error){
-                        console.log('ERROR IN RETRIEVE STUDENT ASSIGNMENT GRADE: ', error);
+                        // console.log('ERROR IN RETRIEVE STUDENT ASSIGNMENT GRADE: ', error);
                       } else {
                         specificStudentGrades.push(grade.models[0].attributes);
 

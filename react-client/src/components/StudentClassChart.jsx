@@ -50,38 +50,36 @@ class StudentClassChart extends React.Component {
     },
     series: [{
       _colorIndex: 0,
-      data: [
-        {
-          data: [{
-            grade: 70
-          }],
-          y: 1
-        },
-        {
-          data: [{
-            grade: 75
-          }],
-          y: 1
-        },
-        {
-          data: [{
-            grade: 60
-          }],
-          y: 1
-        },
-        {
-          data: [{
-            grade: 80
-          }],
-          y: 1
-        },
-        {
-          data: [{
-            grade: 95
-          }],
-          y: 1
-        }
-      ]
+      // data: [
+        // {
+          data: this.props.grades,
+          // y: 1
+        // },
+        // {
+        //   data: [{
+        //     grade: 75
+        //   }],
+        //   y: 1
+        // },
+        // {
+        //   data: [{
+        //     grade: 60
+        //   }],
+        //   y: 1
+        // },
+        // {
+        //   data: [{
+        //     grade: 80
+        //   }],
+        //   y: 1
+        // },
+        // {
+        //   data: [{
+        //     grade: 95
+        //   }],
+        //   y: 1
+        // }
+      // ]
     }]
   };
     return <ReactHighcharts config={config}></ReactHighcharts>
