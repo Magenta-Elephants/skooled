@@ -22,7 +22,6 @@ class TeacherClass extends React.Component {
       assignments[t].grades = []
       for (var s = 0; s < students.length; s++) {
         for (var g = 0; g < assignments.length; g++) {
-          console.log('grades', students[s].grades[0][g].id_assignment)
           if (assignment === students[s].grades[0][g].id_assignment) {
             var studGrade = {
               F_Name: students[s].first_name,
@@ -50,12 +49,7 @@ class TeacherClass extends React.Component {
     console.log(config);
     axios.get('/teacher/class', config)
       .then((response) => {
-        console.log('RESPONSE: ', response);
         this.convertAssignments(response.data.assignments, response.data.students);
-        // this.setState({
-        //   students: response.data.students,
-        //   assignments: response.data.assignments
-        // });
       })
       .catch((err) => {
         console.log('error!', err);
@@ -77,7 +71,6 @@ class TeacherClass extends React.Component {
   }
 
   render() {
-    console.log('STATE',this.state)
     return (
       <div className="col-md-10 col-md-offset-1">
         <Tabs value={this.state.currentTab} onChange={this.handleChange} >

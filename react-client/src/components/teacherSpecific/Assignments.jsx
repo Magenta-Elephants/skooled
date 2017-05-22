@@ -93,7 +93,7 @@ class Assignments extends React.Component {
             {
               this.props.assignments.map((element, index) => 
                 <div key={index}>     
-                  <li onClick={ () => this.changeProp('currentAssignment', this.props.assignments[index]) }>{element.Name}</li>
+                  <li onClick={ () => this.changeProp('currentAssignment', this.props.assignments[index]) }>{element.name}</li>
                   <button onClick={ () => this.openGradeModal(index) }>Add Grade</button>
                 </div>
               )
@@ -106,7 +106,7 @@ class Assignments extends React.Component {
               <select onChange={ e => this.changeProp('studentId', e.target.value) } >
                 {
                  this.props.students.map((element, index) => {
-                    return <option key={index} value={element.id}>{element.F_Name + ' ' + element.L_Name}</option>
+                    return <option key={index} value={element.id}>{element.first_name + ' ' + element.last_name}</option>
                   })
                 }
               </select>

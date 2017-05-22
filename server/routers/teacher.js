@@ -91,6 +91,7 @@ router.get('/class', ensureAuthorized, (req, res) => {
                         classStudents.push(student.attributes)
                         if (classStudents.length === students.models.length) {
                             for (var k = 0; k < classStudents.length; k++) {
+                              
                                 pg.retrieveStudentWithGrades(classStudents[k], (error, student) => {
                                     if (error) {
                                         console.log('ERROR RETRIEVE STUDENT WITH GRADES: ', error);
@@ -107,10 +108,12 @@ router.get('/class', ensureAuthorized, (req, res) => {
                                                         if (w === classStudents.length - 1) {
                                                             console.log('STUDENTS WITH GRADES: ', classStudents[0].grades);
                                                             pg.retrieveClassAssignments(classId, (error, assignments) => {
-                                                                console.log(assignments.models[0].attributes)
+                                              
                                                                 for (var u = 0; u < assignments.models.length; u++) {
                                                                     classAssignments.push(assignments.models[u].attributes);
                                                                     if (classAssignments.length === assignments.models.length) {
+                                                                      console.log('STUDENTS', classStudents[0])
+
                                                                         res.json({ students: classStudents, assignments: classAssignments });
                                                                     }
                                                                 }

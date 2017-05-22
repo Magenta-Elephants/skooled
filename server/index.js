@@ -39,20 +39,20 @@ app.get('/checkOnClientLoad', ensureAuthorized, (req, res) => {
   });
 });
 
-pg.insertUser({
-  email: '123abc@example.com',
-  password: '123',
-  firstName: 'John',
-  lastName: 'Doe',
-  phone: '18001234567',
-  role: 'teacher'
-}, (error, data) => {
-  if (error) {
-    console.error('Error inserting fake user.', error);
-  } else {
-    console.log('Inserted fake user ok.', data);
-  }
-});
+// pg.insertUser({
+//   email: '123abc@example.com',
+//   password: '123',
+//   firstName: 'John',
+//   lastName: 'Doe',
+//   phone: '18001234567',
+//   role: 'teacher'
+// }, (error, data) => {
+//   if (error) {
+//     console.error('Error inserting fake user.', error);
+//   } else {
+//     console.log('Inserted fake user ok.', data);
+//   }
+// });
 
 app.post('/login', (req, res) => {
   let retrievedUser;
