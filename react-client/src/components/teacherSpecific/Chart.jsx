@@ -48,6 +48,7 @@ class Chart extends React.Component {
   }
 
   render() {
+    // console.log('ITEM', this.props.item)
     this.currentItem = this.props.item || { grades: [] }; 
     var categorizedData = this.categorizeData(this.currentItem.grades);
     var formattedData = this.formatData(categorizedData);

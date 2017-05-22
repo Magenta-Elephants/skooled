@@ -39,6 +39,9 @@ app.get('/checkOnClientLoad', ensureAuthorized, (req, res) => {
   });
 });
 
+// ------------ STEP 1
+// COMMENT OUT ALL OTHER STEPS --- MAKE SURE TO BE WORKING ON A FRESH DATABASE
+
 // pg.insertUser({
 //   email: '123abc@example.com',
 //   password: '123',
@@ -53,6 +56,128 @@ app.get('/checkOnClientLoad', ensureAuthorized, (req, res) => {
 //     console.log('Inserted fake user ok.', data);
 //   }
 // });
+
+// pg.insertStudent({
+//   firstName: 'Ali',
+//   lastName: 'Elgiadi'
+// }, (error, data) => {
+//   if (error) {
+//     console.error(error);
+//   } else {
+//     console.log(data);
+//   }
+// });
+
+// pg.insertStudent({
+//   firstName: 'Oliver',
+//   lastName: 'Ullman'
+// }, (error, data) => {
+//   if (error) {
+//     console.error(error);
+//   } else {
+//     console.log(data);
+//   }
+// });
+
+// pg.insertStudent({
+//   firstName: 'Michael',
+//   lastName: 'Drew'
+// }, (error, data) => {
+//   if (error) {
+//     console.error(error);
+//   } else {
+//     console.log(data);
+//   }
+// });
+
+//---------------------------------------- STEP 2
+// COMMENT OUT ALL OTHER STEPS
+
+// pg.insertClass({
+//   name: 'Math',
+//   description: 'Super Cool',
+//   userId: 1
+// }, (error, data) => {
+//   if (error) {
+//     console.error(error);
+//   } else {
+//     console.log(data);
+//   }
+// });
+
+// ----------------------------STEP 3
+// COMMENT OUT ALL OTHER STEPS
+
+// pg.insertClassStudent(1, 1);
+// pg.insertClassStudent(1, 2);
+// pg.insertClassStudent(1, 3);
+
+
+// -------------------------STEP 4
+// COMMENT OUT ALL OTHER STEPS
+
+// pg.insertAssignment({
+//   name: 'Adding',
+//   classId: 1
+// }, (error, data) => {
+//   if (error) {
+//     console.error(error);
+//   } else {
+//     console.log(data);
+//   }
+// });
+
+// pg.insertAssignment({
+//   name: 'Subtraction',
+//   classId: 1
+// }, (error, data) => {
+//   if (error) {
+//     console.error(error);
+//   } else {
+//     console.log(data);
+//   }
+// });
+
+// -----------------------STEP 5
+// COMMENT OUT ALL OTHER STEPS
+
+// pg.insertGrade({
+//   id_assignment: 1,
+//   student_id: 1,
+//   grade: '98'
+// });
+
+// pg.insertGrade({
+//   id_assignment: 1,
+//   student_id: 2,
+//   grade: '89'
+// });
+
+// pg.insertGrade({
+//   id_assignment: 1,
+//   student_id: 3,
+//   grade: '27'
+// });
+
+// pg.insertGrade({
+//   id_assignment: 2,
+//   student_id: 1,
+//   grade: '45'
+// });
+
+// pg.insertGrade({
+//   id_assignment: 2,
+//   student_id: 2,
+//   grade: '34'
+// });
+
+// pg.insertGrade({
+//   id_assignment: 2,
+//   student_id: 3,
+//   grade: '100'
+// });
+
+// ------DONE
 
 app.post('/login', (req, res) => {
   let retrievedUser;

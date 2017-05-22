@@ -8,8 +8,8 @@ class Students extends React.Component {
     super(props);
     this.state = {
       currentStudent: { grades: [] },
-      firstName: '',
-      lastName: ''
+      first_name: '',
+      last_name: ''
     };
     this.changeProp = this.changeProp.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -30,8 +30,8 @@ class Students extends React.Component {
   handleSubmit() {
     var data = {
       studentData: {
-        firstName: this.state.firstName,
-        lastName: this.state.lastName 
+        firstName: this.state.first_name,
+        lastName: this.state.last_name 
       },
       classId: this.props.classId
     };
@@ -55,10 +55,10 @@ class Students extends React.Component {
     const form = 
       <form>
         <label>First Name:
-        <input type="text" onChange={ (e) => this.changeProp('firstName', e.target.value) } />
+        <input type="text" onChange={ (e) => this.changeProp('first_name', e.target.value) } />
         </label>
         <label>Last Name:
-        <input type="text" onChange={ (e) => this.changeProp('lastName', e.target.value) } />
+        <input type="text" onChange={ (e) => this.changeProp('last_name', e.target.value) } />
         </label>
       </form>
 
