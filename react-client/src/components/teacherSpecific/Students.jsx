@@ -68,7 +68,7 @@ class Students extends React.Component {
           <ul>
             {
               this.props.students.map((element, index) => 
-                <li onClick={ () => this.changeProp('currentStudent', this.props.students[index]) } key={index}>{element.F_Name + ' ' + element.L_Name}</li>
+                <li onClick={ () => this.changeProp('currentStudent', this.props.students[index]) } key={index}>{element.first_name + ' ' + element.last_name}</li>
               )
             }
           </ul>
