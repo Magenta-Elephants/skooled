@@ -1,10 +1,17 @@
 import React from 'react';
 import axios from 'axios';
+import StudentClassChart from './StudentClassChart.jsx';
 
 class ClassView extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {
+      assignmentData: [],
+      overallGrade: null,
+      eachGrade: [],
+      class: {},
+      student: {}
+    }
   }
 
   componentDidMount () {
@@ -20,28 +27,86 @@ class ClassView extends React.Component {
 
     axios.get('/students/classDetail', config)
     .then(studentClasses => {
-      console.log('STUDENT CLASSES: ', studentClasses.data)
-      // studentClasses.data = [[current students grades for all assignments], [all assignments with all students grades]]
       this.setState({
-        classes: studentClasses.data
+        assignmentData: studentClasses.data,
       });
       console.log('Success from GET /students/classes');
     })
     .catch(error => {
       console.log('Error from GET /students/classes', error);
     });
+  
+    axios.get('/students/classes', config)
+    .then(studentClasses => {
+      this.setState({
+        class: studentClasses.data[0]
+      });
+      console.log('Success from GET /students/classes DOOODOO');
+    })
+    .catch(error => {
+      console.log('Error from GET /students/classes', error);
+    });
+
+    axios.get('/students', config)
+    .then(studs => {
+      this.setState({
+        student: studs.data
+      });
+    })
+    .catch(error => {
+      console.log('Error back from GET /students request.', error);
+    });
+  }
+
+  getThisStudentsOverallGrade () {
+    var gradeArray = this.state.assignmentData[0];
+    var total = 0;
+
+    for (var i = 0; i < gradeArray.length; i++) {
+      total += parseInt(gradeArray[i].grade);
+    }
+
+    var overallGrade = total / gradeArray.length;
+
+    this.setState({overallGrade: overallGrade}) 
+  }
+
+  getStudentsGradeEachAssignment () {
+    var gradeArray = this.state.assignmentData[0];
+    var eachGradeArray = [];
+
+    for (var i = 0; i < gradeArray.length; i++) {
+      eachGradeArray.push(parseInt(gradeArray[i].grade));
+    }
+
+    this.setState({eachGrade: eachGradeArray})
   }
 
   render () {
-    console.log('CLASS VIEW PROPS: ',this.props)
+    var assignmentData = this.state.assignmentData[1] || [];
+    var thisStudentGrades = this.state.assignmentData[0] || [];
+    var eachGrade = this.state.eachGrade || [];
     return (
       <div>
         <h1>ClassView</h1>
-        <h2>Class ID: {this.props.classId}</h2>
-        <h3>Past Assignments</h3>
-          <p>Pop Quiz</p>
-          <p>Test 1</p>
-          <p>Midterm</p>
+        <h2>Class : {this.state.class.name}</h2>
+        <h2 onClick={ () => this.getThisStudentsOverallGrade()} >
+          Overall Grade: {this.state.overallGrade || '[click]'}
+        </h2>
+        <h3>Past Assignments:</h3>
+        {assignmentData.map((assgn, index) =>
+          <h4 key={index}>{index}: {assgn.name}</h4>  
+        )}
+        <h3 onClick={ () => this.getStudentsGradeEachAssignment()} >
+          Chart Grades [click]
+        </h3>
+        <div className="displayedGraph">
+          <StudentClassChart type="Class" 
+            grades={this.state.eachGrade} 
+            studentId={this.props.studentId}
+            studentName={this.state.student.first_name}
+          />
+        </div>
       </div>
     )
   }

@@ -36,11 +36,10 @@ router.get('/classes', ensureAuthorized, (req, res) => {
 
   retrieveStudentClassesAsync(studentId)
     .then(studentClasses => {
-      // console.log('STUDENT CLASSES: ', studentClasses);
       return retrieveClassAsync(studentClasses.models[0].attributes.id_class)
     })
     .then(classInfo => {
-      res.json(classInfo.attributes);
+      res.json(classInfo);
     })
     .catch(error => {
       res.sendStatus(500);
@@ -85,6 +84,8 @@ router.get('/classDetail', ensureAuthorized, (req, res) => {
               assignmentGrades.push(grade.models[k].attributes);
               if (assignmentGrades.length === grade.models.length) {
                 // console.log('\nASSIGNMENT GRADES: ', assignmentGrades);
+                // console.log('allAssignmentsGrades length: ', allAssignmentsGrades.length);
+                // console.log('classAssignments length', classAssignments.length)
                 allAssignmentsGrades.push(assignmentGrades);
               }
             }
@@ -99,10 +100,14 @@ router.get('/classDetail', ensureAuthorized, (req, res) => {
                   for (var p = 0; p < classAssignments.length; p++) {
                     pg.retrieveStudentAssignmentGrade(classAssignments[p].id, studentId, (error, grade) => {
                       // console.log('\nGRADE 2: ', grade);
-                      specificStudentGrades.push(grade.models[0].attributes);
+                      if (error){
+                        // console.log('ERROR IN RETRIEVE STUDENT ASSIGNMENT GRADE: ', error);
+                      } else {
+                        specificStudentGrades.push(grade.models[0].attributes);
 
-                      if (specificStudentGrades.length === classAssignments.length) {
-                        res.json([specificStudentGrades, classAssignments]);
+                        if (specificStudentGrades.length === classAssignments.length) {
+                          res.json([specificStudentGrades, classAssignments]);
+                        }
                       }
                     })
                   }

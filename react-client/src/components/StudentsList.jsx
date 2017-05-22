@@ -37,6 +37,7 @@ class StudentsList extends React.Component {
   }
 
   render () {
+    console.log(this.state.students)
     return (
       <div>
         <h1>{this.props.userFirstName}'s Students</h1>

@@ -222,10 +222,12 @@ module.exports = {
 
   // ME: GET ALL CLASSES ASSOCIATED WITH A STUDENT
   retrieveStudentClasses : (id_student, callback) => {
+    // console.log('student id: ', id_student)
     ClassStudent.forge()
       .query('where', {id_student: id_student})
       .fetchAll({required: true})
       .then(studentClasses => {
+        // console.log('students classes: ', studentClasses)
         callback(null, studentClasses);
       })
       .catch(error => {
@@ -251,7 +253,7 @@ module.exports = {
       .query('where', {id: id_class})
       .fetchAll({required: true})
       .then(classes => {
-        callback(null, classes);
+        callback(null, classes.models);
       })
       .catch(error => {
         callback(error, null);
